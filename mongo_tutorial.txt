@@ -1,0 +1,75 @@
+#our connection
+
+client = pymongo.MongoClient(url to a connection)
+db =client['database-name']
+
+#to create a collection or use it if it exists:
+
+collection = db['collection-name]
+
+#insert 
+#we can specify id by adding this key-value pair to our values dict- {"_id": 1}
+#insert many > create a list of dicts and use x=collection.insert_many(list)
+
+mydict = { "name": "John", "address": "Highway 37" }
+x = collection.insert_one(mydict)
+
+#if we want to get the id of inserted document:
+
+print(x.inserted_id)
+
+#find
+#we can add a parameter to query the collection.
+#so we can have something like collection.find_one({"name":"amit"})
+
+x= collection.find_one()
+
+#to get all the documents in the collection and print them:
+
+for x in collection.find():
+  print(x)
+
+#Return Only Some Fields (the result will have only name and address)
+#You get an error if you specify both 0 and 1 values in the same object (except if one of the fields is the _id field):
+#the empty dict is for the query option.
+
+for x in collection.find({},{ "_id": 0, "name": 1, "address": 1 }):
+  print(x)
+
+#another example, will exclude only address
+
+for x in collection.find({},{ "address": 0 }):
+  print(x)
+
+#queries
+
+myquery = { "address": "Park Lane 38" }
+mydoc = collection.find(myquery)
+
+#to print each document came back from the query:
+
+for x in mydoc:
+  print(x)
+
+#delete one
+
+myquery = { "address": "Mountain 21" }
+collection.delete_one(myquery)
+
+#delete many
+
+x = collection.delete_many(myquery)
+print(x.deleted_count, " documents deleted.")
+
+#update one
+
+myquery = { "address": "Valley 345" }
+newvalues = { "$set": { "address": "Canyon 123" } }
+
+collection.update_one(myquery, newvalues)
+
+#update many
+
+x = collection.update_many(myquery, newvalues)
+
+print(x.modified_count, "documents updated.") #to see how many updated
