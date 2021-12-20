@@ -1,12 +1,20 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, redirect, request
 app = Flask(__name__)
 
+'''
+    === HOME PAGE ===
+'''
 @app.route("/")
-def hello_world():
-    # return "<p>Hello, World!</p>"
+def home():
+    return render_template('subfolder/home.html')
+
+
+@app.route("/login", methods=["POST"])
+def post_login_info():
+    print(request.form)
+    print(type(request))
     return render_template('subfolder/home.html')
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

@@ -1,0 +1,13 @@
+import db_functions as connection
+
+'''
+In this file, we will have all our necessary functions to handle system requests.
+    1. clean queries
+    2. catching errors 
+    
+'''
+
+print(connection.DB)
+
+def check_login():
+    pass
