@@ -1,4 +1,4 @@
-from FinalProject.db_queries.db_functions import *
+from db_queries.db_functions import *
 
 
 def check_login(user_inputs:dict):
