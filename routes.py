@@ -4,7 +4,7 @@ from main import *
 app = Flask(__name__)
 @app.route("/")
 def home():
-    print('I am here and i want to die')
+    print('I am here and i want to die, now a bit less')
     return render_template('subfolder/home.html')
 
 
