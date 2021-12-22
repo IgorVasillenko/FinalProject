@@ -2,10 +2,6 @@ from flask import Flask, render_template, redirect, request
 from main import *
 
 app = Flask(__name__)
-
-'''
-    === HOME PAGE ===
-'''
 @app.route("/")
 def home():
     return render_template('subfolder/home.html')
@@ -20,9 +16,9 @@ def post_login_info():
         return render_template('subfolder/home.html', message=message)
     # return render_template('subfolder/home.html')
 
-@app.route("/register", methods =["GET"])
-def register():
-    return "hello world"
+# @app.route("/register", methods =["GET"])
+# def register():
+#     return "hello world"
 
 
 if __name__ == '__main__':
