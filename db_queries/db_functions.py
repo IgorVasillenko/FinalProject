@@ -75,7 +75,7 @@ def find_one(collection:str, query:dict=None):
 
 
 if __name__ == '__main__':
-    # delete_one('kids', {"name":"amit"})
+    # delete_one('kids', {"name": "amit"})
     # insert_many('kids',[{"name":"amit", "age":"20"},{"name":"amit", "age":"20"},{"name":"amit", "age":"20"}])
     # delete_many('kids',{"name":"amit", "age":"20"})
     # print(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}}))
