@@ -14,7 +14,6 @@ def post_login_info():
     else:
         message = "Wrong username or password"
         return render_template('subfolder/home.html', message=message)
-    # return render_template('subfolder/home.html')
 
 # @app.route("/register", methods =["GET"])
 # def register():
