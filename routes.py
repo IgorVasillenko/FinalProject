@@ -10,18 +10,21 @@ def home():
 
 
 @app.route("/login", methods=["POST"])
-'''
-This route take a request with username and password info.
-it sends the data to the check login.
-    if the function return true -> move the user to the main users page.
-    otherwise -> render the login page again with alert to the user about the error. 
-'''
 def post_login_info():
+    """
+    This route take a request with username and password info.
+    it sends the data to the check login.
+    :return:
+        if the function return true -> move the user to the main users page.
+        otherwise -> render the login page again with alert to the user about the error.
+
+    """
     if check_login(request.form.to_dict()):
         return render_template('subfolder/mainPage.html')
     else:
         message = "Wrong username or password"
         return render_template('subfolder/home.html', message=message)
+
 
 @app.route("/register", methods =["GET", "POST"])
 # this route render the register form.
