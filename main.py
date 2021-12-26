@@ -13,3 +13,5 @@ def check_login(user_inputs:dict):
         return True
     return False
 
+def check_register():
+    pass

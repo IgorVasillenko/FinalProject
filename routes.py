@@ -3,19 +3,19 @@ from main import *
 
 app = Flask(__name__)
 
-# @app.route("/", methods=["GET" ,"POST"])
-# def home():
-#     # print('I am here and i want to die, now a bit less')
-#     return render_template('subfolder/home.html')
-
 
 @app.route("/")
 def home():
-    # print('I am here and i want to die, now a bit less')
     return render_template('subfolder/home.html')
 
 
 @app.route("/login", methods=["POST"])
+'''
+This route take a request with username and password info.
+it sends the data to the check login.
+    if the function return true -> move the user to the main users page.
+    otherwise -> render the login page again with alert to the user about the error. 
+'''
 def post_login_info():
     if check_login(request.form.to_dict()):
         return render_template('subfolder/mainPage.html')
@@ -23,10 +23,18 @@ def post_login_info():
         message = "Wrong username or password"
         return render_template('subfolder/home.html', message=message)
 
-@app.route("/register", methods =["GET"])
+@app.route("/register", methods =["GET", "POST"])
 # this route render the register form.
 def register():
-    return render_template(('/subfolder/register.html'))
+    if request.method == "GET":
+        return render_template(('/subfolder/register.html'))
+    else:
+        # The request is POST so we need to validate the data.
+        # if the validate function return true -> redirect to the main users page
+        # otherwise -> alert the user what is the problem.
+        print(request.form.to_dict())
+        check_register()
+        return 'POST REGISTER WORKS'
 
 @app.route("/registerCheck", methods =["POST"])
 # this route get the user input in register page and handles it.
