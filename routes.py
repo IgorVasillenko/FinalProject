@@ -35,9 +35,13 @@ def register():
         # The request is POST so we need to validate the data.
         # if the validate function return true -> redirect to the main users page
         # otherwise -> alert the user what is the problem.
-        print(request.form.to_dict())
-        check_register()
-        return 'POST REGISTER WORKS'
+        valid, msg = check_register(request.form.to_dict())
+        print(valid, msg)
+        if valid:
+            return 'POST REGISTER WORKS'
+        else:
+            return render_template('/subfolder/register.html', msg=msg)
+
 
 @app.route("/registerCheck", methods =["POST"])
 # this route get the user input in register page and handles it.
