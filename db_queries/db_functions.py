@@ -30,12 +30,12 @@ def insert_many(collection:str, list_of_dicts:list):
     print(insert_many)
 
 
-def delete_one(collection:str, query:dict):
+def delete_one(collection: str, query: dict):
     connection = DB[collection]
     connection.delete_one(query)
 
 
-def delete_many(collection:str, query:dict):
+def delete_many(collection: str, query: dict):
     connection = DB[collection]
     connection.delete_many(query)
 
@@ -80,4 +80,7 @@ if __name__ == '__main__':
     # delete_many('kids',{"name":"amit", "age":"20"})
     # print(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}}))
     # insert_one('managers', {'username': 'AAA', 'password':'AAA'})
-    print ('file DB functions is working')
+    # print ('file DB functions is working')
+    con = DB["managers"].find()
+    for doc in con:
+        print(doc)

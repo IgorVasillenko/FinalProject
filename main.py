@@ -1,17 +1,40 @@
 from db_queries.db_functions import *
 
+'''
+TO DO
+1. handle db errors -> wrap basic sb functions with try/catch 
+
+'''
 
 def check_login(user_inputs: dict):
     """
     :param: this function receive username and password then check if it exists in the DB.
     :return: if the data is matched to the DB data, return true -> otherwise return false.
     """
-    print(user_inputs)
     manager_from_db = find_one('managers', user_inputs)
     print(manager_from_db)
     if manager_from_db:
         return True
     return False
+
+def handle_register(user_input: dict):
+    """
+    the function send the user inputs to test to see if the inputs are valid.
+    if the inputs are valid -> insert the new manager to the DB in managers collection.
+    otherwise, handle the error and send the error msg back to the front.
+    :param user_input: dictionary of user input from register page, should contain all prop in manager document.
+    :return: bool, msg
+                bool -> true if everything good with the user's input
+                        false if the inputs didnt pass all the tests.
+                msg -> if bool is true - none
+                        if bool is false - the error msg
+    """
+    bool, msg = check_register(user_input)
+    if bool:
+        insert_one('managers', user_input)
+        return bool, msg
+    return bool, msg
+
 
 
 def check_register(user_input: dict):

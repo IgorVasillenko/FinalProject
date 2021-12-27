@@ -33,10 +33,9 @@ def register():
         return render_template(('/subfolder/register.html'))
     else:
         # The request is POST so we need to validate the data.
-        # if the validate function return true -> redirect to the main users page
+        # if the handler function return true -> redirect to the main users page
         # otherwise -> alert the user what is the problem.
-        valid, msg = check_register(request.form.to_dict())
-        print(valid, msg)
+        valid, msg = handle_register(request.form.to_dict())
         if valid:
             return 'POST REGISTER WORKS'
         else:
