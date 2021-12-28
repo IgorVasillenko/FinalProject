@@ -37,15 +37,15 @@ def register():
         # otherwise -> alert the user what is the problem.
         valid, msg = handle_register(request.form.to_dict())
         if valid:
-            return 'POST REGISTER WORKS'
+            return redirect("/mainPage")
         else:
             return render_template('/subfolder/register.html', msg=msg)
 
 
-@app.route("/registerCheck", methods =["POST"])
+@app.route("/mainPage", methods =["GET"])
 # this route get the user input in register page and handles it.
-def registerCheck():
-    return "hello world"
+def mainPage():
+    return render_template("subfolder/mainPage.html")
 
 
 if __name__ == '__main__':

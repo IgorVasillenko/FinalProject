@@ -102,3 +102,20 @@ def create_query(dictionary: dict, prop: str):
             the return obj is ready to be used as a query to the DB.
     """
     return {prop: dictionary[prop]}
+
+def safe_run(func):
+
+    def func_wrapper(*args, **kwargs):
+
+        try:
+           return func(*args, **kwargs)
+
+        except Exception as e:
+
+            print(e)
+            return None
+
+    return func_wrapper
+
+if __name__ == '__main__':
+    print('yay')

@@ -14,53 +14,70 @@ DB = client['face-recognition-db']
 
 
 def insert_one(collection:str, values:dict):
+    """
+
+    :param collection: a collection we want to insert to
+    :param values: values to be inserted
+    :return: return approval that the document inserted.
+    """
     connection = DB[collection]
-    insert = connection.insert_one(values)
+    return connection.insert_one(values)
 
 
 def insert_many(collection:str, list_of_dicts:list):
     """
     :param collection:
-    :param list_of_dicts: should be a list containing dictonaries.
-    should look like this: [{},{},{}] -> the dictonaries should not be empty.
-    :return:
+    :param list_of_dicts: should be a list containing dictionaries.
+    should look like this: [{},{},{}] -> the dictionaries should not be empty.
+    :return: approval that the documents inserted.
     """
     connection = DB[collection]
-    insert_many = connection.insert_many(list_of_dicts)
-    print(insert_many)
+    return connection.insert_many(list_of_dicts).inserted_ids
 
 
 def delete_one(collection: str, query: dict):
+    """
+
+    :param collection:
+    :param query:
+    :return: approval that the document was deleted
+    """
     connection = DB[collection]
-    connection.delete_one(query)
+    return connection.delete_one(query).deleted_count
 
 
 def delete_many(collection: str, query: dict):
+    """
+
+    :param collection:
+    :param query:
+    :return: approval that the documents deleted.
+    """
     connection = DB[collection]
-    connection.delete_many(query)
+    return connection.delete_many(query).deleted_count
 
 
 def update_one(collection:str, query:dict, newValues:dict):
     """
     :param collection:
-    :param query:
+    :param query: the query that will help us select the needed document
     :param newValues: new values should be in this format: {"$set": { "address": "Canyon 123" } }
-    :return:
+    :return: approval that the document was updated
     """
     connection = DB[collection]
-    return connection.update_one(query, newValues)
+    return connection.update_one(query, newValues).modified_count
 
 
-def update_one_and_return(collection:str, query:dict, newValues:dict):
-    # this function is same as updade_one.
+def update_one_and_return(collection: str, query: dict, newValues: dict):
+    # this function is same as update_one.
     # the only differ is that the function returns the updated document.
     connection = DB[collection]
     return connection.find_one_and_update(query, newValues)
 
 
-def update_many(collection:str, query:dict, newValues:dict):
+def update_many(collection:str, query: dict, newValues: dict):
     connection = DB[collection]
-    connection.update_many(query, newValues)
+    return connection.update_many(query, newValues)
 
 
 def find_one(collection:str, query:dict=None):
@@ -75,12 +92,12 @@ def find_one(collection:str, query:dict=None):
 
 
 if __name__ == '__main__':
-    # delete_one('kids', {"name": "amit"})
-    # insert_many('kids',[{"name":"amit", "age":"20"},{"name":"amit", "age":"20"},{"name":"amit", "age":"20"}])
-    # delete_many('kids',{"name":"amit", "age":"20"})
-    # print(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}}))
-    # insert_one('managers', {'username': 'AAA', 'password':'AAA'})
+    # print(delete_one('kids', {"name": "amit"}))
+    # print(insert_many('kids',[{"name":"amit", "age":"20"},{"name":"amit", "age":"20"},{"name":"amit", "age":"20"}]))
+    print(delete_many('kids',{"name":"amit", "age":"20"}))
+    # print(bool(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}})))
+    # print(insert_one('managers', {'username': 'AAA', 'password':'AAA'}))
     # print ('file DB functions is working')
-    con = DB["managers"].find()
-    for doc in con:
-        print(doc)
+    # con = DB["managers"].find()
+    # for doc in con:
+    #     print(doc)
