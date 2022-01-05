@@ -21,7 +21,7 @@ def insert_one(collection:str, values:dict):
     :return: return approval that the document inserted.
     """
     connection = DB[collection]
-    return connection.insert_one(values)
+    return connection.insert_one(values).inserted_id
 
 
 def insert_many(collection:str, list_of_dicts:list):
@@ -46,7 +46,7 @@ def delete_one(collection: str, query: dict):
     return connection.delete_one(query).deleted_count
 
 
-def delete_many(collection: str, query: dict):
+def delete_many(collection: str, query: dict =None):
     """
 
     :param collection:
@@ -54,8 +54,10 @@ def delete_many(collection: str, query: dict):
     :return: approval that the documents deleted.
     """
     connection = DB[collection]
-    return connection.delete_many(query).deleted_count
-
+    if query:
+        return connection.delete_many(query).deleted_count
+    # for developing using
+    return connection.delete_many({}).deleted_count
 
 def update_one(collection:str, query:dict, newValues:dict):
     """
@@ -77,10 +79,10 @@ def update_one_and_return(collection: str, query: dict, newValues: dict):
 
 def update_many(collection:str, query: dict, newValues: dict):
     connection = DB[collection]
-    return connection.update_many(query, newValues)
+    return connection.update_many(query, newValues).modified_count
 
 
-def find_one(collection:str, query:dict=None):
+def find_one(collection: str, query: dict = {}):
     """
     :param collection:  the collection we want to find form
     :param query: if we don't want any query, the default value is none.
@@ -91,13 +93,25 @@ def find_one(collection:str, query:dict=None):
     return connection.find_one(query)
 
 
+def find_all(collection: str, query: dict = {}):
+    """
+
+    :param collection:  the collection we want to find form
+    :param query: if we don't want any query, the default value is none.
+    :return: iterable object containing all matching documents.
+    """
+    connection = DB[collection]
+    return connection.find(query)
+
+
 if __name__ == '__main__':
-    # print(delete_one('kids', {"name": "amit"}))
-    # print(insert_many('kids',[{"name":"amit", "age":"20"},{"name":"amit", "age":"20"},{"name":"amit", "age":"20"}]))
-    print(delete_many('kids',{"name":"amit", "age":"20"}))
+    print(delete_one('kids', {"name": "amit"}))
+    # print(insert_many('kids',[{"_id":12,"first_name":"amit", "last_name":"margalittt","class":"NY morning"},{"_id":122,"first_name":"amit", "last_name":"margalittt", "class":"NY morning"},{"_id":1232, "first_name":"amit", "last_name":"margalittt", "class":"NY morning"}]))
+    # print(delete_many('kids',()))
     # print(bool(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}})))
-    # print(insert_one('managers', {'username': 'AAA', 'password':'AAA'}))
+    # print(insert_one('managers', {'_id': 'AAA', 'password':'AAA', "first_name":"Amit", "last_name": "meow", "class":"NY morning"}))
     # print ('file DB functions is working')
+    # print(update_many('kids', {"name":"amit"},{"$set":{"class":"NY morning"}}))
     # con = DB["managers"].find()
     # for doc in con:
     #     print(doc)

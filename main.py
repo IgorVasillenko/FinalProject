@@ -12,7 +12,6 @@ def check_login(user_inputs: dict):
     :return: if the data is matched to the DB data, return true -> otherwise return false.
     """
     manager_from_db = find_one('managers', user_inputs)
-    print(manager_from_db)
     if manager_from_db:
         return True
     return False
@@ -103,19 +102,38 @@ def create_query(dictionary: dict, prop: str):
     """
     return {prop: dictionary[prop]}
 
-def safe_run(func):
 
-    def func_wrapper(*args, **kwargs):
+def fetch_class_kids(username):
+    class_name = find_one('managers', {"_id": username})["class"]
+    class_list = find_all("kids", {"class":class_name})
+    clean_list_result = handle_cursor_obj(class_list)
+    return clean_list_result
 
-        try:
-           return func(*args, **kwargs)
 
-        except Exception as e:
+def handle_cursor_obj(cursor_obj):
+    """
+    in this function are going to iterate the given obj and make it a list of documents.
+    :param cursor_obj:
+    :return: list of documents.
+    """
+    result = []
+    for doc in cursor_obj:
+        result.append(doc)
+    return result
 
-            print(e)
-            return None
-
-    return func_wrapper
+# def safe_run(func):
+#
+#     def func_wrapper(*args, **kwargs):
+#
+#         try:
+#            return func(*args, **kwargs)
+#
+#         except Exception as e:
+#
+#             print(e)
+#             return None
+#
+#     return func_wrapper
 
 if __name__ == '__main__':
     print('yay')
