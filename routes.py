@@ -20,7 +20,7 @@ def post_login_info():
 
     """
     if check_login(request.form.to_dict()):
-        username = request.form['username']
+        username = request.form['_id']
         return redirect(f'/mainPage/{username}')
     else:
         message = "Wrong username or password"
