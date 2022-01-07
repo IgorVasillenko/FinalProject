@@ -37,6 +37,7 @@ def register():
         # if the handler function return true -> redirect to the main users page
         # otherwise -> alert the user what is the problem.
         valid, msg = handle_register(request.form.to_dict())
+        # valid = False
         if valid:
             username = request.form['_id']
             return redirect(f'/mainPage/{username}')
@@ -57,6 +58,30 @@ def mainPage(username):
     data = fetch_class_kids(username)
 
     return render_template("subfolder/mainPage.html", username=username, data=data)
+
+
+@app.route('/addKid/<username>', methods =["GET", "POST"])
+# this route handle the get and post request for adding kids.
+def addKid(username):
+    if request.method == "GET":
+        class_name = handle_addKid_page(username)
+        return render_template("subfolder/addKid.html", class_name=class_name)
+    else:
+        '''
+        the request method is post, which means we have to handle the request data.
+        we send the user inputs and the class name we got from the main page to the handle function.
+        then we render the mainPage again with an Error or success msg.
+    
+        '''
+
+        handle_addKid_post(user_inputs=request.form.to_dict(), class_name=username)
+        print(request.form.to_dict())
+        print(username)
+
+        return'yaya'
+
+
+
 
 
 if __name__ == '__main__':

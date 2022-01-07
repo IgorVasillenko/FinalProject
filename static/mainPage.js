@@ -21,3 +21,7 @@ function removeClickedAtt(){
         rows[i].setAttribute('isClicked', 'false');
     }
 }
+
+function test(){
+    console.log('i did it')
+}

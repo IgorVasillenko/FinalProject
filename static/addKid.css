@@ -1,0 +1,15 @@
+.page-header{
+    text-align: center;
+}
+
+.card{
+    width: 80%;
+    margin: auto;
+}
+
+.class-inject{
+    position:relative;
+    bottom: 35px;
+    left: 15px;
+    user-select: none;
+}

@@ -52,9 +52,15 @@
 
             </div>
             <div class="btn-group">
-                <button class="btn btn-outline-secondary">Add</button>
-                <button class="btn btn-outline-secondary">Edit</button>
-                <button class="btn btn-outline-secondary">Delete</button>
+                <form action="/addKid/{{username}}" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">Add</button>
+                </form>
+                <form action="/" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">Edit</button>
+                </form>
+                <form action="/" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">Delete</button>
+                </form>
             </div>
 
         </div>

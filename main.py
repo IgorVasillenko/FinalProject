@@ -42,6 +42,7 @@ def check_register(user_input: dict):
         1.check if all the fields are not empty
         2.check if password len > 6
         3.check if username which is _id is not taken
+        4.check if the class name is not taken, we need it to be unique
     :param user_input: dictionary of user input from register page, should contain all prop in manager document.
     :return: the function returns true if all text are good, if any test is wrong -> return false.
     """
@@ -58,8 +59,24 @@ def check_register(user_input: dict):
         # if the query returned document and the username already exists in the DB
         msg = 'Username is already taken.'
         return False, msg
+    if not check_unique_class(user_input):
+        # if the class name already exists in the system
+        msg = "Class name already exists, please select another name"
+        return False , msg
     return True, 'none'
 
+
+def check_unique_class(user_input:dict):
+    """
+    Class name should be unique so in this function we check if the user input for class name is valid
+    and doesnt exists in the DB for other manager.
+    :param user_input: the input dictionary we got from the user in the register page.
+    :return: true if the class name doesnt exist ,otherwise -> False
+    """
+    query = create_query(user_input,'class')
+    if find_one('managers',query):
+        return False
+    return True
 
 def check_input_fields(user_input: dict):
     """
@@ -120,6 +137,20 @@ def handle_cursor_obj(cursor_obj):
     for doc in cursor_obj:
         result.append(doc)
     return result
+
+
+def handle_addKid_page(username):
+    """
+
+    :param username: the teacher username we got from the mainPage
+    :return: the class name of the teacher that will be injected to the class name input in addKid html page.
+    """
+    class_name = find_one('managers', {"_id": username})["class"]
+    return class_name
+
+def handle_addKid_post(user_inputs, class_name):
+    print(user_inputs)
+
 
 # def safe_run(func):
 #
