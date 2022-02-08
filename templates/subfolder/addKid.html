@@ -17,7 +17,10 @@
     <div class="inputs-container">
         <div class="card">
             <div class="card-body p-4 p-md-5">
-                <form action="{{ url_for('addKid' ,username=class_name) }}" method="post">
+                        {% if message %}
+                            <p class="text-danger">{{ message }}</p>
+                        {% endif %}
+                <form action="{{ url_for('addKid' ,username=class_name) }}" method="post" enctype="multipart/form-data">
                 <!-- first row includes first & last name inputs. -->
                   <div class="row first-input-row">
                      <!-- first name input -->
@@ -92,20 +95,35 @@
                       <div class="form-outline">
                         <input name="Parent Name" type="text" placeholder="Parent Name" class="form-control form-control-lg" />
                       </div>
-
                     </div>
                     <!-- parent phone number -->
                     <div class="col-md-6 mb-4 pb-2">
-
                       <div class="form-outline">
-                        <input type="tel" placeholder="Parent Phone Number" class="form-control form-control-lg" />
+                        <input type="tel" name="parent_phone" placeholder="Parent Phone Number" class="form-control form-control-lg" />
                       </div>
 
                     </div>
                   </div>
-
-                  <div class="row">
-                    <div class="col-12">
+                    <!--fifth row and on is for images upload. -->
+                    <div class="row five-input-row">
+                    <!--Upload pictures -->
+                    <div class="col-md-6 mb-4 pb-2">
+                      <div class="form-outline">
+                          <input  name="picture-1" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-2" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-3" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-4" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-5" type="file" class="file" data-browse-on-zone-click="true">
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+                      <div class="form-outline">
+                          <input  name="picture-6" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-7" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-8" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-9" type="file" class="file" data-browse-on-zone-click="true">
+                          <input  name="picture-10" type="file" class="file" data-browse-on-zone-click="true">
+                      </div>
                     </div>
                   </div>
 
@@ -117,8 +135,6 @@
               </div>
             </div>
         </div>
-
-    </div>
 
 </body>
 <script>

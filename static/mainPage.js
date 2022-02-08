@@ -6,7 +6,6 @@ for (let i = 0; i < rows.length; i++){
         rows[i].style.backgroundColor = '#7fcdcd';
         removeClickedAtt();
         rows[i].setAttribute('isClicked', 'true')
-        console.log(rows[i]);
     })
 }
 
@@ -22,6 +21,3 @@ function removeClickedAtt(){
     }
 }
 
-function test(){
-    console.log('i did it')
-}

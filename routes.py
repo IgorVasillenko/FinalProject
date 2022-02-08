@@ -1,7 +1,12 @@
 from flask import Flask, render_template, redirect, request, url_for
+from werkzeug.utils import secure_filename
 from main import *
 
 app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = "static/images/"
+
+
+
 
 
 @app.route("/")
@@ -73,16 +78,34 @@ def addKid(username):
         then we render the mainPage again with an Error or success msg.
     
         '''
+        user_inputs = request.form.to_dict()
+        user_inputs['class'] = username
+        x = request.files["picture-1"].read()
+        handle_addKid_post(user_inputs, request.files.to_dict())
+        # print(type(request.files["picture-1"].read()))
+        # handle_files(request.files["picture-1"],x)
+        return render_template("subfolder/addKid.html", class_name=user_inputs['class'])
+        # bool, msg = handle_addKid_post(user_inputs=user_inputs, files=request.files.to_dict())
+        # if bool:
+        #     # inputs & files came back valid, return the main page with success msg
+        #     return 'true'
+        # else:
+        #     return render_template("subfolder/addKid.html", class_name=username, message = msg)
+        #
+        # return'false'
 
-        handle_addKid_post(user_inputs=request.form.to_dict(), class_name=username)
-        print(request.form.to_dict())
-        print(username)
 
-        return'yaya'
-
+def handle_files(img, bytes):
+    filename = secure_filename(img.filename)
+    if check_suffix(filename):
+        f = open("assets/images/image1.png", "wb")
+        f.write(bytes)
+        f.close()
+        img.save(app.config['UPLOAD_FOLDER'] + filename)
+        return True
 
 
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

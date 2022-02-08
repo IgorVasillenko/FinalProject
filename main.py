@@ -1,10 +1,6 @@
 from db_queries.db_functions import *
+from flask import Flask
 
-'''
-TO DO
-1. handle db errors -> wrap basic sb functions with try/catch 
-
-'''
 
 def check_login(user_inputs: dict):
     """
@@ -15,6 +11,7 @@ def check_login(user_inputs: dict):
     if manager_from_db:
         return True
     return False
+
 
 def handle_register(user_input: dict):
     """
@@ -33,7 +30,6 @@ def handle_register(user_input: dict):
         insert_one('managers', user_input)
         return bool, msg
     return bool, msg
-
 
 
 def check_register(user_input: dict):
@@ -78,10 +74,11 @@ def check_unique_class(user_input:dict):
         return False
     return True
 
+
 def check_input_fields(user_input: dict):
     """
 
-    :param user_input: dictionary of user input from register page, should contain all prop in manager document.
+    :param user_input: dictionary of user input from register page, should contain all prop in a document.
     :return: true if all input fields len > 0 , otherwise return false
 
     """
@@ -148,23 +145,132 @@ def handle_addKid_page(username):
     class_name = find_one('managers', {"_id": username})["class"]
     return class_name
 
-def handle_addKid_post(user_inputs, class_name):
-    print(user_inputs)
+
+def handle_addKid_post(user_inputs: dict,  files: dict):
+    """
+    in this function we need to:
+        1. check the text inputs and see if the data is valid
+        2. check the image files and see if it's valid.
+        3. process the images, transform it to binary context
+    if both inputs and files are valid ->  concat them to one dict and insert to the db
+    else -> send back the error msg.
+    :param user_inputs: text inputs we got from the add_kid post request.
+    :param files: the 10 image files we got from our user.
+    :return: the function return bool, msg
+            bool - true if both text & files are valid -> else false.
+            msg - None if bool is true -> else error msg.
+
+    """
+    files_bool, files_msg = handle_files(files)
+    inputs_bool,inputs_msg = check_add_kid_inputs(user_inputs)
 
 
-# def safe_run(func):
-#
-#     def func_wrapper(*args, **kwargs):
-#
-#         try:
-#            return func(*args, **kwargs)
-#
-#         except Exception as e:
-#
-#             print(e)
-#             return None
-#
-#     return func_wrapper
+def check_add_kid_inputs(user_inputs:dict):
+    """
+    the function check the text inputs only. not the image files.
+    valid tests:
+        1.check if all the fields are not empty
+        2.check if id is in the correct len and doesnt contain non-int chars.
+        3.check that id doesnt exists in the system
+        4.check that phone number has exact 10 chars.
+    :param user_inputs: dictionary of user input from addKid page, should contain all prop in kids document.
+    :return: the function returns true if all tests are good,
+             if any test is wrong -> return false and a msg containing what is wrong with the input.
+    """
+    if not check_input_fields(user_inputs):
+        # some fields left empty
+        msg = 'All fields are required'
+        return False, msg
+    if (not check_len(user_inputs['_id'], 9)) or (not convert_to_int(user_inputs['_id'])):
+        # id len < 9 or it contains chars that are not numbers.
+        msg = 'ID must be exactly 9 chars and contain only numbers.'
+        return False, msg
+    if not match_len(user_inputs['parent_phone'], 10) or (not convert_to_int(user_inputs['parent_phone'])):
+        # parent phone number is not 10 chars or contains non-int chars.
+        msg = 'Parent phone number must be exactly 10 chars. only numbers allowed.'
+        return False, msg
+    query = create_query(user_inputs, '_id')
+    kid = find_one('kids',query)
+    if kid:
+        # if the kid _id already exists in the system
+        msg = f"Kid already exists in the system in {kid['class']} class"
+        return False, msg
+    return True, None
+
+
+def convert_to_int(prop):
+    """
+    :param prop: prop we want to check if it's an int although it comes from the input fields as strings.
+    :return: return true if the prop is int , else return false.
+    """
+    try:
+        int_prop = int(prop)
+        return True
+    except:
+        # we had an error converting to string, meaning we have other chars in it.
+        return False
+
+
+def check_len(text, num):
+    """
+
+    :param text: a string we want to test his length.
+    :param num: the minimum length we want the string to be
+    :return: true if the string len is >= given num. otherwise -> return false.
+    """
+    return len(text) >= num
+
+
+def match_len(param, num):
+    """
+
+    :param param: a parameter we want to test his length.
+    :param num: the exact length we want the parameter to be
+    :return: true if the parameter len = = given num. otherwise -> return false.
+    """
+    print(len(param))
+    return len(param) == num
+
+
+def check_suffix(filename):
+    """
+
+    :param filename:  the file name we want to check.
+    :return: true if the file suffix is in the allowed list.
+    """
+    ALLOWED_EXTENSIONS = [
+        'png',
+        'jpg',
+        'jpeg',
+    ]
+    split_str = filename.split(".")
+    return split_str[-1].lower() in ALLOWED_EXTENSIONS
+
+
+def handle_files(files):
+    """
+    the function check that the user uploaded 10 images and create clean dictionary that
+    holds for each file it's name and the binary context of the file.
+    in addition, for each file we will check if the suffix is good.
+    :param files: dictionary containing file name and fileStorage object.
+    :return: bool, msg ->
+        bool = if the user uploaded 10 valid pictures return true -> else false.
+        msg = if bool is true -> msg will be the clean result dictionary. else-> error msg.
+    """
+    result_dict = {}
+    for k, v in files.items():
+        if not v:
+            # user didn't upload 10 images.
+            msg = "10 images are required."
+            return False, msg
+        if not check_suffix(v.filename):
+            # if the suffix is not in the allowed suffixes.
+            msg = "Only images are allowed, other files won't be supported."
+            return False, msg
+        result_dict[k] = v.read()
+    return True, result_dict
+
+
 
 if __name__ == '__main__':
     print('yay')
