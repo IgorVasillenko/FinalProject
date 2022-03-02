@@ -228,7 +228,6 @@ def match_len(param, num):
     :param num: the exact length we want the parameter to be
     :return: true if the parameter len = = given num. otherwise -> return false.
     """
-    print(len(param))
     return len(param) == num
 
 
