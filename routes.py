@@ -1,13 +1,11 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from main import *
+import os
+
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "static/images/"
-
-
-
-
 
 @app.route("/")
 def home():
@@ -80,28 +78,52 @@ def addKid(username):
         '''
         user_inputs = request.form.to_dict()
         user_inputs['class'] = username
-        x = request.files["picture-1"].read()
-        handle_addKid_post(user_inputs, request.files.to_dict())
-        # print(type(request.files["picture-1"].read()))
-        # handle_files(request.files["picture-1"],x)
-        return render_template("subfolder/addKid.html", class_name=user_inputs['class'])
-        # bool, msg = handle_addKid_post(user_inputs=user_inputs, files=request.files.to_dict())
-        # if bool:
-        #     # inputs & files came back valid, return the main page with success msg
-        #     return 'true'
-        # else:
-        #     return render_template("subfolder/addKid.html", class_name=username, message = msg)
-        #
-        # return'false'
+        bool, msg = handle_addKid_post(user_inputs, request.files.to_dict())
+        if bool:
+            # get from DB the teacher username of current class.
+            class_teacher = fetch_username_using_classname(user_inputs['class'])
+            return redirect(f'/mainPage/{class_teacher}')
+        else:
+
+            return render_template("subfolder/addKid.html", class_name=username, message = msg)
+
+@app.route('/editKid/<username>', methods =["GET", "POST"])
+# this route handle the get and post request for adding kids.
+def editKid(username):
+    return "hello"
 
 
-def handle_files(img, bytes):
+# def handle_saving_files(files_dict):
+#     '''
+#
+#     :param files_dict:
+#     :return: relevant files dictonary containing
+#     '''
+#     result_files_dict = {}
+#     for k,v in files_dict.items():
+#         img_bytes = v.read()
+#         print(img_bytes)
+#         result_files_dict[k] = img_bytes
+#         # print(result_files_dict[v.filename])
+#         # save_file(v, img_bytes)
+#     print(result_files_dict.keys())
+#     print(result_files_dict['picture-1'])
+
+
+def save_file(img, img_bytes):
+    '''
+        the function save the image in assets/images
+    :param img: file storage object
+    :param img_bytes: the bytes the file built off.
+    :return: true
+    '''
     filename = secure_filename(img.filename)
     if check_suffix(filename):
-        f = open("assets/images/image1.png", "wb")
-        f.write(bytes)
+        f = open(f"assets/images/{filename}", "wb")
+        f.write(img_bytes)
         f.close()
-        img.save(app.config['UPLOAD_FOLDER'] + filename)
+        # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # img.save(app.config['UPLOAD_FOLDER'] + filename)
         return True
 
 

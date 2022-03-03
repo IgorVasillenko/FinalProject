@@ -116,6 +116,15 @@ def create_query(dictionary: dict, prop: str):
     """
     return {prop: dictionary[prop]}
 
+def fetch_username_using_classname(classname):
+    '''
+
+    :param classname:
+    :return: username that manage the given class.
+    '''
+    print ("print of find one: ", find_one('managers', {"class": classname})["_id"])
+    return find_one('managers', {"class": classname})["_id"]
+
 
 def fetch_class_kids(username):
     class_name = find_one('managers', {"_id": username})["class"]
@@ -161,8 +170,21 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
             msg - None if bool is true -> else error msg.
 
     """
-    files_bool, files_msg = handle_files(files)
+    files_bool, processed_files = handle_files(files)
     inputs_bool,inputs_msg = check_add_kid_inputs(user_inputs)
+    if files_bool and inputs_bool:
+        # add to db ,return true
+        insert_values = {**processed_files, **user_inputs}
+        insert_one('kids',insert_values)
+        return True, None
+    else:
+        if inputs_msg and (type(processed_files) == str):
+            final_mag = str(inputs_msg) + " " + str(processed_files)
+        elif inputs_msg:
+            final_mag = str(inputs_msg)
+        else:
+            final_mag = str(processed_files)
+        return False, final_mag
 
 
 def check_add_kid_inputs(user_inputs:dict):
@@ -179,7 +201,7 @@ def check_add_kid_inputs(user_inputs:dict):
     """
     if not check_input_fields(user_inputs):
         # some fields left empty
-        msg = 'All fields are required'
+        msg = 'All fields are required.'
         return False, msg
     if (not check_len(user_inputs['_id'], 9)) or (not convert_to_int(user_inputs['_id'])):
         # id len < 9 or it contains chars that are not numbers.
@@ -187,13 +209,13 @@ def check_add_kid_inputs(user_inputs:dict):
         return False, msg
     if not match_len(user_inputs['parent_phone'], 10) or (not convert_to_int(user_inputs['parent_phone'])):
         # parent phone number is not 10 chars or contains non-int chars.
-        msg = 'Parent phone number must be exactly 10 chars. only numbers allowed.'
+        msg = 'Parent phone number must be exactly 10 chars, only numbers allowed.'
         return False, msg
     query = create_query(user_inputs, '_id')
     kid = find_one('kids',query)
     if kid:
         # if the kid _id already exists in the system
-        msg = f"Kid already exists in the system in {kid['class']} class"
+        msg = f"Kid already exists in the system in {kid['class']} class."
         return False, msg
     return True, None
 
@@ -266,7 +288,9 @@ def handle_files(files):
             # if the suffix is not in the allowed suffixes.
             msg = "Only images are allowed, other files won't be supported."
             return False, msg
-        result_dict[k] = v.read()
+        img_bytes = v.read()
+        result_dict[k] = img_bytes
+
     return True, result_dict
 
 

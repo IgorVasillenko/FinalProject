@@ -90,6 +90,7 @@ def find_one(collection: str, query: dict = {}):
     """
 
     connection = DB[collection]
+    # print(connection.find_one(query)['_id'])
     return connection.find_one(query)
 
 
@@ -105,18 +106,7 @@ def find_all(collection: str, query: dict = {}):
 
 
 if __name__ == '__main__':
-    # print(delete_one('kids', {"name": "amit"}))
-    # print(insert_many('kids',[{"_id":12,"first_name":"amit", "last_name":"margalittt","class":"NY morning"},{"_id":122,"first_name":"amit", "last_name":"margalittt", "class":"NY morning"},{"_id":1232, "first_name":"amit", "last_name":"margalittt", "class":"NY morning"}]))
-    # print(delete_many('kids',()))
-    # print(bool(update_one('kids', {"name":"amit"}, {"$set":{"update":"works"}})))
-    # print(insert_one('managers', {'_id': 'AAA', 'password':'AAA', "first_name":"Amit", "last_name": "meow", "class":"NY morning"}))
-    # print ('file DB functions is working')
-    x = find_one('kids',{"_id":"205634967"})
-    _bytes = x["picture1"]
-    # f = open("assets/images/image1.png", "wb")
-    # f.write(_bytes)
-    # f.close()
-    # print(update_many('kids', {"name":"amit"},{"$set":{"class":"NY morning"}}))
+    delete_many('kids', {"class": "NY morning"})
     # con = DB["managers"].find()
     # print(find_one('kids',{"_id":"205634967"}))
     # for doc in con:
