@@ -13,27 +13,24 @@
 
 <body>
 
-    <h1 class=page-header>Add Kid </h1>
+    <h1 class=page-header>Edit Kid </h1>
     <div class="inputs-container">
         <div class="card">
             <div class="card-body p-4 p-md-5">
-                        {% if message %}
-                            <p class="text-danger">{{ message }}</p>
-                        {% endif %}
-                <form action="{{ url_for('addKid' ,username=class_name) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('editKid' ,kidId=kidObj._id) }}" method="post" enctype="multipart/form-data">
                 <!-- first row includes first & last name inputs. -->
                   <div class="row first-input-row">
                      <!-- first name input -->
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input type="text" name="first_name" placeholder="First Name" class="form-control form-control-lg" />
+                        <input type="text" name="first_name" placeholder="First Name"  value="{{kidObj.first_name}}" class="form-control form-control-lg" />
                       </div>
 
                     </div>
                     <!-- last name input -->
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input type="text" name="last_name" placeholder="Last Name" class="form-control form-control-lg" />
+                        <input type="text" value="{{kidObj.last_name}}" name="last_name" placeholder="Last Name" class="form-control form-control-lg" />
                       </div>
 
                     </div>
@@ -43,7 +40,7 @@
                       <!-- id input -->
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input type="text" name="_id" placeholder="ID" class="form-control form-control-lg" />
+                        <input type="text" value="{{kidObj._id}}" name="_id" placeholder="ID" class="form-control form-control-lg" />
                       </div>
 
                     </div>
@@ -53,7 +50,7 @@
                       <div class="form-outline ">
                         <input type="text" name="class" readonly class="form-control form-control-lg" />
                         <input type="hidden" name="class" >
-                        <span class="class-inject">{{ class_name }}</span>
+                        <span class="class-inject">{{ kidObj.class }}</span>
                       </div>
 
                     </div>
@@ -64,7 +61,7 @@
                     <div class="col-md-6 mb-4 d-flex align-items-center">
                       <div class="form-outline datepicker w-100">
                         <h6 class="mb-2 pb-1">Birthday </h6>
-                        <input type="date" min="2000-01-01" max="2021-12-31" id="birthday" class="form-control form-control-lg" name="birthday"/>
+                        <input value="{{kidObj.birthday}}" type="date" min="2000-01-01" max="2021-12-31" id="birthday" class="form-control form-control-lg" name="birthday"/>
                       </div>
 
                     </div>
@@ -93,13 +90,13 @@
                     <!-- parent name input -->
                     <div class="col-md-6 mb-4 pb-2">
                       <div class="form-outline">
-                        <input name="parent_name" type="text" placeholder="Parent Name" class="form-control form-control-lg" />
+                        <input value="{{kidObj.parent_name}}" name="parent_Name" type="text" placeholder="Parent Name" class="form-control form-control-lg" />
                       </div>
                     </div>
                     <!-- parent phone number -->
                     <div class="col-md-6 mb-4 pb-2">
                       <div class="form-outline">
-                        <input type="tel" name="parent_phone" placeholder="Parent Phone Number" class="form-control form-control-lg" />
+                        <input type="tel" value="{{kidObj.parent_phone}}" name="parent_phone" placeholder="Parent Phone Number" class="form-control form-control-lg" />
                       </div>
 
                     </div>
@@ -132,6 +129,7 @@
                   </div>
 
                 </form>
+                <img src="/static/images/WIN_20200203_12_21_02_Pro.jpg">
               </div>
             </div>
         </div>

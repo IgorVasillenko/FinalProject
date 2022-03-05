@@ -173,7 +173,8 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
     files_bool, processed_files = handle_files(files)
     inputs_bool,inputs_msg = check_add_kid_inputs(user_inputs)
     if files_bool and inputs_bool:
-        # add to db ,return true
+        # add to db ,return true, handle gender radio selection
+        user_inputs = handle_gender_input(user_inputs)
         insert_values = {**processed_files, **user_inputs}
         insert_one('kids',insert_values)
         return True, None
@@ -185,6 +186,18 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
         else:
             final_mag = str(processed_files)
         return False, final_mag
+
+
+def handle_gender_input(inputs_dict):
+    """
+
+    :param inputs_dict: dictionary we got from the user
+    :return: updated dictionary containing the gender instead of flexRadioDefault property.
+    """
+
+    inputs_dict['gender'] = inputs_dict['flexRadioDefault']
+    del inputs_dict['flexRadioDefault']
+    return inputs_dict
 
 
 def check_add_kid_inputs(user_inputs:dict):
@@ -289,7 +302,7 @@ def handle_files(files):
             msg = "Only images are allowed, other files won't be supported."
             return False, msg
         img_bytes = v.read()
-        result_dict[k] = img_bytes
+        result_dict[k] = {"file_name":v.filename, "img_bytes": img_bytes}
 
     return True, result_dict
 
