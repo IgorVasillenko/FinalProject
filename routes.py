@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from main import *
+import FoldersManager
 import os
 
 
@@ -148,4 +149,5 @@ def save_file(img, img_bytes):
 
 
 if __name__ == '__main__':
+    print('routes is the main')
     app.run(debug=True)
