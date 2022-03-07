@@ -87,6 +87,7 @@ def addKid(username):
 
             return render_template("subfolder/addKid.html", class_name=username, message = msg)
 
+
 @app.route('/editKid/<kidId>', methods =["GET", "POST"])
 # this route handle the get and post request for adding kids.
 def editKid(kidId):
@@ -102,7 +103,7 @@ def editKid(kidId):
 
 
 def save_file_test(img_name, img_bytes):
-    f = open(f"static/images/{img_name}", "wb")
+    f = open(f"./static/images/{img_name}", "wb")
     f.write(img_bytes)
     f.close()
     # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
