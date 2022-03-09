@@ -70,7 +70,7 @@ def mainPage(username):
 def addKid(username):
     if request.method == "GET":
         class_name = handle_addKid_page(username)
-        return render_template("subfolder/addKid2.html", class_name=class_name)
+        return render_template("subfolder/addKid.html", class_name=class_name)
     else:
         '''
         the request method is post, which means we have to handle the request data.

@@ -200,7 +200,7 @@ def handle_gender_input(inputs_dict):
     return inputs_dict
 
 
-def check_add_kid_inputs(user_inputs:dict):
+def check_add_kid_inputs(user_inputs: dict):
     """
     the function check the text inputs only. not the image files.
     valid tests:
@@ -225,7 +225,7 @@ def check_add_kid_inputs(user_inputs:dict):
         msg = 'Parent phone number must be exactly 10 chars, only numbers allowed.'
         return False, msg
     query = create_query(user_inputs, '_id')
-    kid = find_one('kids',query)
+    kid = find_one('kids', query)
     if kid:
         # if the kid _id already exists in the system
         msg = f"Kid already exists in the system in {kid['class']} class."
