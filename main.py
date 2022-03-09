@@ -1,5 +1,6 @@
 from db_queries.db_functions import *
 from flask import Flask
+import base64
 
 
 def check_login(user_inputs: dict):
@@ -122,7 +123,6 @@ def fetch_username_using_classname(classname):
     :param classname:
     :return: username that manage the given class.
     '''
-    print ("print of find one: ", find_one('managers', {"class": classname})["_id"])
     return find_one('managers', {"class": classname})["_id"]
 
 
@@ -171,12 +171,12 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
 
     """
     files_bool, processed_files = handle_files(files)
-    inputs_bool,inputs_msg = check_add_kid_inputs(user_inputs)
+    inputs_bool, inputs_msg = check_add_kid_inputs(user_inputs)
     if files_bool and inputs_bool:
         # add to db ,return true, handle gender radio selection
         user_inputs = handle_gender_input(user_inputs)
         insert_values = {**processed_files, **user_inputs}
-        insert_one('kids',insert_values)
+        insert_one('kids', insert_values)
         return True, None
     else:
         if inputs_msg and (type(processed_files) == str):
@@ -301,11 +301,19 @@ def handle_files(files):
             # if the suffix is not in the allowed suffixes.
             msg = "Only images are allowed, other files won't be supported."
             return False, msg
-        img_bytes = v.read()
-        result_dict[k] = {"file_name":v.filename, "img_bytes": img_bytes}
+        # convert to base 64 for easy fetch.
+        bytes_base_64 = base64.b64encode(v.read())
+        result_dict[k] = {"file_name": v.filename, "img_bytes": bytes_base_64}
 
     return True, result_dict
 
+def save_file_test(img_name, img_bytes):
+    f = open(f"./static/images/{img_name}", "wb")
+    f.write(img_bytes)
+    f.close()
+    # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # img.save(app.config['UPLOAD_FOLDER'] + filename)
+    return True
 
 
 if __name__ == '__main__':

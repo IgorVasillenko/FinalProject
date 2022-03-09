@@ -64,18 +64,19 @@ def mainPage(username):
     return render_template("subfolder/mainPage.html", username=username, data=data)
 
 
-@app.route('/addKid/<username>', methods =["GET", "POST"])
+
+@app.route('/addKid/<username>', methods=["GET", "POST"])
 # this route handle the get and post request for adding kids.
 def addKid(username):
     if request.method == "GET":
         class_name = handle_addKid_page(username)
-        return render_template("subfolder/addKid.html", class_name=class_name)
+        return render_template("subfolder/addKid2.html", class_name=class_name)
     else:
         '''
         the request method is post, which means we have to handle the request data.
         we send the user inputs and the class name we got from the main page to the handle function.
         then we render the mainPage again with an Error or success msg.
-    
+
         '''
         user_inputs = request.form.to_dict()
         user_inputs['class'] = username
@@ -85,69 +86,17 @@ def addKid(username):
             class_teacher = fetch_username_using_classname(user_inputs['class'])
             return redirect(f'/mainPage/{class_teacher}')
         else:
-
-            return render_template("subfolder/addKid.html", class_name=username, message = msg)
-
+            return render_template("subfolder/addKid.html", class_name=username, message=msg)
 
 @app.route('/editKid/<kidId>', methods =["GET", "POST"])
 # this route handle the get and post request for adding kids.
 def editKid(kidId):
     if request.method == "GET":
         kid_details = find_one('kids', {"_id": kidId})
-        for k,v in kid_details.items():
-            if 'picture' in k:
-                save_file_test(v["file_name"], v["img_bytes"])
-
         return render_template("subfolder/editKid.html", kidObj=kid_details)
     else:
         return "hey there post request for editing "
 
 
-def save_file_test(img_name, img_bytes):
-    f = open(f"./static/images/{img_name}", "wb")
-    f.write(img_bytes)
-    f.close()
-    # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    # img.save(app.config['UPLOAD_FOLDER'] + filename)
-    return True
-
-
-# def handle_saving_files(files_dict):
-#     '''
-#
-#     :param files_dict:
-#     :return: relevant files dictonary containing
-#     '''
-#     result_files_dict = {}
-#     for k,v in files_dict.items():
-#         img_bytes = v.read()
-#         print(img_bytes)
-#         result_files_dict[k] = img_bytes
-#         # print(result_files_dict[v.filename])
-#         # save_file(v, img_bytes)
-#     print(result_files_dict.keys())
-#     print(result_files_dict['picture-1'])
-
-
-def save_file(img, img_bytes):
-    '''
-        the function save the image in assets/images
-    :param img: file storage object
-    :param img_bytes: the bytes the file built off.
-    :return: true
-    '''
-    filename = secure_filename(img.filename)
-    if check_suffix(filename):
-        f = open(f"assets/images/{filename}", "wb")
-        f.write(img_bytes)
-        f.close()
-        # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # img.save(app.config['UPLOAD_FOLDER'] + filename)
-        return True
-
-
-
-
 if __name__ == '__main__':
-    print('routes is the main')
     app.run(debug=True)
