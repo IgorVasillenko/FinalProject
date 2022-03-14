@@ -170,7 +170,7 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
             msg - None if bool is true -> else error msg.
 
     """
-    files_bool, processed_files = handle_files(files)
+    files_bool, processed_files = handle_files(files, 10)
     inputs_bool, inputs_msg = check_add_kid_inputs(user_inputs)
     if files_bool and inputs_bool:
         # add to db ,return true, handle gender radio selection
@@ -179,11 +179,15 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
         insert_one('kids', insert_values)
         return True, None
     else:
+        # take care of the msg we want to send back to the user.
         if inputs_msg and (type(processed_files) == str):
+            # error in text inputs AND in the files.
             final_mag = str(inputs_msg) + " " + str(processed_files)
         elif inputs_msg:
+            # error in text inputs
             final_mag = str(inputs_msg)
         else:
+            # error in the files.
             final_mag = str(processed_files)
         return False, final_mag
 
@@ -200,17 +204,15 @@ def handle_gender_input(inputs_dict):
     return inputs_dict
 
 
-def check_add_kid_inputs(user_inputs: dict):
+def common_input_validate(user_inputs: dict):
     """
-    the function check the text inputs only. not the image files.
     valid tests:
         1.check if all the fields are not empty
-        2.check if id is in the correct len and doesnt contain non-int chars.
-        3.check that id doesnt exists in the system
-        4.check that phone number has exact 10 chars.
-    :param user_inputs: dictionary of user input from addKid page, should contain all prop in kids document.
-    :return: the function returns true if all tests are good,
-             if any test is wrong -> return false and a msg containing what is wrong with the input.
+        2.check that id doesnt exists in the system
+        3.check that phone number has exact 10 chars.
+    :param user_inputs:
+    :return: if all the inputs passed the validate test -> return True,None
+            in any other case, return False and relevant msg.
     """
     if not check_input_fields(user_inputs):
         # some fields left empty
@@ -224,13 +226,69 @@ def check_add_kid_inputs(user_inputs: dict):
         # parent phone number is not 10 chars or contains non-int chars.
         msg = 'Parent phone number must be exactly 10 chars, only numbers allowed.'
         return False, msg
-    query = create_query(user_inputs, '_id')
-    kid = find_one('kids', query)
-    if kid:
-        # if the kid _id already exists in the system
-        msg = f"Kid already exists in the system in {kid['class']} class."
-        return False, msg
     return True, None
+
+
+def check_add_kid_inputs(user_inputs: dict):
+    """
+    the function check the text inputs only. not the image files.
+    if the validate tests came true:
+        check if id is in the correct len and doesnt contain non-int chars.
+        if so, return false and relevant msg.
+        if the kid is not in the system. add to the db then return true.
+
+    :param user_inputs: dictionary of user input from addKid page, should contain all prop in kids document.
+    :return: the function returns true if all tests are good,
+             if any test is wrong -> return false and a msg containing what is wrong with the input.
+    """
+    bool_validate, msg = common_input_validate(user_inputs)
+    if bool_validate:
+        # the common validate is ok, now check if the kid _id already exists in the system
+        query = create_query(user_inputs, '_id')
+        kid = find_one('kids', query)
+        if kid:
+            # if the kid _id already exists in the system
+            msg = f"Kid already exists in the system in {kid['class']} class."
+            return False, msg
+
+        # The inputs passed all test, return true
+        return True, None
+
+    return bool_validate, msg
+
+
+def handle_editKid_post(user_inputs: dict,  files: dict):
+    '''
+    in this function we need to:
+        1. check the text inputs and see if the data is valid
+        2. check the image files and see if it's valid.
+        3. process the images, transform it to binary context
+    if both inputs and files are valid ->  concat them to one dict and insert to the db
+    else -> send back the error msg.
+    :param user_inputs: the edited user inputs
+    :param files: the inserted files if exist.
+    :return:the function return bool, msg
+            bool - true if both text & files are valid -> else false.
+            msg - None if bool is true -> else error msg.
+    '''
+
+    files_bool, processed_files = handle_files(files, len(files))
+    inputs_bool, inputs_msg = common_input_validate(user_inputs)
+    if files_bool and inputs_bool:
+        # handle gender radio selection, update the db , return true
+        user_inputs = handle_gender_input(user_inputs)
+        updated_values = {**processed_files, **user_inputs}
+        query = create_query(user_inputs, '_id')
+        update_one(collection='kids', query=query, newValues=updated_values)
+        return True, None
+    else:
+        if inputs_msg and (type(processed_files) == str):
+            final_mag = str(inputs_msg) + " " + str(processed_files)
+        elif inputs_msg:
+            final_mag = str(inputs_msg)
+        else:
+            final_mag = str(processed_files)
+        return False, final_mag
 
 
 def convert_to_int(prop):
@@ -281,12 +339,13 @@ def check_suffix(filename):
     return split_str[-1].lower() in ALLOWED_EXTENSIONS
 
 
-def handle_files(files):
+def handle_files(files, required_pictures: int):
     """
     the function check that the user uploaded 10 images and create clean dictionary that
     holds for each file it's name and the binary context of the file.
     in addition, for each file we will check if the suffix is good.
     :param files: dictionary containing file name and fileStorage object.
+    :param required_pictures : The number of pictures the function should expect.
     :return: bool, msg ->
         bool = if the user uploaded 10 valid pictures return true -> else false.
         msg = if bool is true -> msg will be the clean result dictionary. else-> error msg.
@@ -294,7 +353,7 @@ def handle_files(files):
     result_dict = {}
     for k, v in files.items():
         if not v:
-            # user didn't upload 10 images.
+            # user didn't upload requiredPictures images.
             msg = "10 images are required."
             return False, msg
         if not check_suffix(v.filename):
@@ -306,6 +365,7 @@ def handle_files(files):
         result_dict[k] = {"file_name": v.filename, "img_bytes": bytes_base_64}
 
     return True, result_dict
+
 
 def save_file_test(img_name, img_bytes):
     f = open(f"./static/images/{img_name}", "wb")

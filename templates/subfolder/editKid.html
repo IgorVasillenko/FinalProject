@@ -17,6 +17,9 @@
     <div class="inputs-container">
         <div class="card">
             <div class="card-body p-4 p-md-5">
+                {% if message %}
+                    <p class="text-danger">{{ message }}</p>
+                {% endif %}
                 <form action="{{ url_for('editKid' ,kidId=kidObj._id) }}" method="post" enctype="multipart/form-data">
                 <!-- first row includes first & last name inputs. -->
                   <div class="row first-input-row">
@@ -40,7 +43,8 @@
                       <!-- id input -->
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
-                        <input type="text" value="{{kidObj._id}}" name="_id" placeholder="ID" class="form-control form-control-lg" />
+                        <input type="text" value="{{kidObj._id}}" name="_id" readonly placeholder="ID" class="form-control form-control-lg" />
+                        <input type="hidden" name="_id" >
                       </div>
 
                     </div>
@@ -48,9 +52,9 @@
                     <div class="col-md-6 mb-4">
 
                       <div class="form-outline ">
-                        <input type="text" name="class" readonly class="form-control form-control-lg" />
+                        <input type="text" name="class" readonly class="form-control form-control-lg" value="{{ kidObj.class }}" />
                         <input type="hidden" name="class" >
-                        <span class="class-inject">{{ kidObj.class }}</span>
+<!--                        <span class="class-inject">{{ kidObj.class }}</span>-->
                       </div>
 
                     </div>
@@ -101,33 +105,24 @@
 
                     </div>
                   </div>
-                    <!--fifth row and on is for images upload. -->
-                    <div class="row five-input-row">
-                    <!--Upload pictures -->
-                    <div class="col-md-6 mb-4 pb-2">
-                      <div class="form-outline">
-                          <input  name="picture-1" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-2" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-3" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-4" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-5" type="file" class="file" data-browse-on-zone-click="true">
-                      </div>
+                    <!-- display existing pictures-->
+                    <div class="display-pictures d-flex justify-content-between mb-2">
+                        <img onclick="test('picture-1',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-1'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-2',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-2'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-3',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-3'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-4',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-4'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-5',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-5'].img_bytes.decode('utf8')}} "  />
                     </div>
-                    <div class="col-md-6 mb-4 pb-2">
-                      <div class="form-outline">
-                          <input  name="picture-6" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-7" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-8" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-9" type="file" class="file" data-browse-on-zone-click="true">
-                          <input  name="picture-10" type="file" class="file" data-browse-on-zone-click="true">
-                      </div>
+                    <div class="display-pictures d-flex justify-content-between">
+                        <img onclick="test('picture-6',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-6'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-7',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-7'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-8',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-8'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-9',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-9'].img_bytes.decode('utf8')}} "  />
+                        <img onclick="test('picture-10',this)" width="150" height="120" src="data:image/png;base64,{{ kidObj['picture-10'].img_bytes.decode('utf8')}} "  />
                     </div>
-                  </div>
-
-                    <img width="100" height="100" src="data:image/png;base64,{{ kidObj['picture-1'].img_bytes.decode('utf8')}} "  />
-
                   <div class="mt-4 pt-2">
-                    <input class="submit btn btn-primary btn-lg" type="submit" value="Submit"/>
+                    <input class="btn btn-primary btn-lg" type="submit" value="Submit"/>
+                    <a href=../mainPage/{{teacher_username}} ><button type="button" class="btn btn-danger btn-lg">Cancel</button></a>
                   </div>
 
                 </form>
@@ -137,6 +132,16 @@
 
 </body>
 <script>
+    function test(pictureNumber, elementRef){
+        let newNode = document.createElement('input');
+        newNode.name = pictureNumber;
+        newNode.type = 'file';
+        newNode.classList.add("file")
+        newNode.setAttribute("data-browse-on-zone-click","true")
+        elementRef.after(newNode);
+        elementRef.remove()
 
+
+    }
 </script>
 </html>

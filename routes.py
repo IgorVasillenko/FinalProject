@@ -60,8 +60,13 @@ def mainPage(username):
     :return: render the html with injected username and data rows.
     """
     data = fetch_class_kids(username)
+    if data:
+        # there are students in the class .
+        class_name = data[0]["class"]
+    else:
+        class_name = find_one('managers', {"_id" : username})["class"]
 
-    return render_template("subfolder/mainPage.html", username=username, data=data)
+    return render_template("subfolder/mainPage.html", username=username, data=data, class_name=class_name )
 
 
 
@@ -88,14 +93,32 @@ def addKid(username):
         else:
             return render_template("subfolder/addKid.html", class_name=username, message=msg)
 
+
 @app.route('/editKid/<kidId>', methods =["GET", "POST"])
-# this route handle the get and post request for adding kids.
+# this route handle the get and post request for editing kids.
 def editKid(kidId):
+    kid_details = find_one('kids', {"_id": kidId})
+    class_teacher = fetch_username_using_classname(kid_details['class'])
+
     if request.method == "GET":
-        kid_details = find_one('kids', {"_id": kidId})
-        return render_template("subfolder/editKid.html", kidObj=kid_details)
+        return render_template("subfolder/editKid.html", kidObj=kid_details, teacher_username=class_teacher)
     else:
-        return "hey there post request for editing "
+        '''
+        the request method is post, which means we have to handle the request data.
+        we send the user both inputs and files to the handle function.
+        '''
+        bool, msg = handle_editKid_post(request.form.to_dict(), request.files.to_dict())
+        if bool:
+            '''the inputs were valid, db was update - return the main page.'''
+            return redirect(f'/mainPage/{class_teacher}')
+        else:
+            '''inputs weren't good, re-render the page with the error msg.'''
+            return render_template("subfolder/editKid.html", kidObj=kid_details, message=msg)
+
+
+@app.route('/uploadPictures/<className>', methods = ["GET", "POST"])
+def uploadPictures(className):
+    return 'hey upload pictures'
 
 
 if __name__ == '__main__':

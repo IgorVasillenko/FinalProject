@@ -59,15 +59,18 @@ def delete_many(collection: str, query: dict =None):
     # for developing using
     return connection.delete_many({}).deleted_count
 
-def update_one(collection:str, query:dict, newValues:dict):
+
+def update_one(collection:str, query: dict, newValues: dict):
     """
     :param collection:
     :param query: the query that will help us select the needed document
-    :param newValues: new values should be in this format: {"$set": { "address": "Canyon 123" } }
+    :param newValues: updated values
     :return: approval that the document was updated
     """
     connection = DB[collection]
-    return connection.update_one(query, newValues).modified_count
+    valid_new_values = {"$set": newValues}
+
+    return connection.update_one(query, valid_new_values).modified_count
 
 
 def update_one_and_return(collection: str, query: dict, newValues: dict):
