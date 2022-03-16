@@ -1,4 +1,5 @@
 from db_queries.db_functions import *
+from datetime import date
 from flask import Flask
 import base64
 
@@ -279,7 +280,7 @@ def handle_editKid_post(user_inputs: dict,  files: dict):
         user_inputs = handle_gender_input(user_inputs)
         updated_values = {**processed_files, **user_inputs}
         query = create_query(user_inputs, '_id')
-        update_one(collection='kids', query=query, newValues=updated_values)
+        update_one(collection='kids', query=query, newValues=updated_values, upsertBool=False)
         return True, None
     else:
         if inputs_msg and (type(processed_files) == str):
@@ -374,6 +375,34 @@ def save_file_test(img_name, img_bytes):
     # img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     # img.save(app.config['UPLOAD_FOLDER'] + filename)
     return True
+
+
+def handle_uploaded_pictures(files_dict, class_name):
+    result_list = []
+    for k, v in files_dict.items():
+        if not v:
+            # file doesnt exist
+            pass
+        elif not check_suffix(v.filename):
+            # The suffix is not in the allowed suffixes.
+            pass
+        else:
+            # convert to base 64 for easy fetch.
+            bytes_base_64 = base64.b64encode(v.read())
+            result_list.append(bytes_base_64)
+    number_of_new_imgs = len(result_list)
+    if number_of_new_imgs > 0:
+        # if there are any valid pictures, update or create today attendance document.
+        # update_one('attendance',)
+        upload_pictures_to_db({"images": result_list}, class_name)
+    return result_list
+
+
+def upload_pictures_to_db(files_dict, class_name):
+    today = date.today()
+    # dd/mm/YY format
+    curr_date = today.strftime("%d/%m/%Y")
+    update_one('attendance', {"date": curr_date, "class_name": class_name}, files_dict, upsertBool=True)
 
 
 if __name__ == '__main__':

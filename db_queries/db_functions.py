@@ -60,17 +60,18 @@ def delete_many(collection: str, query: dict =None):
     return connection.delete_many({}).deleted_count
 
 
-def update_one(collection:str, query: dict, newValues: dict):
+def update_one(collection: str, query: dict, newValues: dict, upsertBool: bool):
     """
     :param collection:
     :param query: the query that will help us select the needed document
     :param newValues: updated values
+    :param upsertBool: true if want to insert if doesnt exist, otherwise false.
     :return: approval that the document was updated
     """
     connection = DB[collection]
     valid_new_values = {"$set": newValues}
 
-    return connection.update_one(query, valid_new_values).modified_count
+    return connection.update_one(query, valid_new_values, upsert=upsertBool).modified_count
 
 
 def update_one_and_return(collection: str, query: dict, newValues: dict):
@@ -109,7 +110,9 @@ def find_all(collection: str, query: dict = {}):
 
 
 if __name__ == '__main__':
-    delete_many('kids', {"class": "NY morning"})
+    # print(delete_many('attendence', {}))
+    attendenceIndex = DB['attendance']
+    # attendenceIndex.create_index([('date', pymongo.DESCENDING), ('class',pymongo.DESCENDING)], unique=True)
     # con = DB["managers"].find()
     # print(find_one('kids',{"_id":"205634967"}))
     # for doc in con:

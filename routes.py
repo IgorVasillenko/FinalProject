@@ -49,7 +49,7 @@ def register():
             return render_template('/subfolder/register.html', msg=msg)
 
 
-@app.route('/mainPage/<username>', methods =["GET"])
+@app.route('/mainPage/<username>', methods=["GET"])
 # this route get the user input in register page and handles it.
 def mainPage(username):
     """
@@ -64,7 +64,7 @@ def mainPage(username):
         # there are students in the class .
         class_name = data[0]["class"]
     else:
-        class_name = find_one('managers', {"_id" : username})["class"]
+        class_name = find_one('managers', {"_id": username})["class"]
 
     return render_template("subfolder/mainPage.html", username=username, data=data, class_name=class_name )
 
@@ -116,9 +116,14 @@ def editKid(kidId):
             return render_template("subfolder/editKid.html", kidObj=kid_details, message=msg)
 
 
-@app.route('/uploadPictures/<className>', methods = ["GET", "POST"])
+@app.route('/uploadPictures/<className>', methods=["GET", "POST"])
 def uploadPictures(className):
-    return 'hey upload pictures'
+    if request.method == "GET":
+        return render_template("subfolder/uploadPictures.html", className=className)
+    else:
+        # the method is post, handle the files , add to db
+        handle_uploaded_pictures(request.files.to_dict(), className)
+        return 'post made'
 
 
 if __name__ == '__main__':
