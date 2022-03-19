@@ -81,7 +81,7 @@ function delete_kid(kidId, username) {
   if (answer !== username){
     alert('you have entered wrong username')
   } else {
-    let url = `http://${window.location.host}/deleteKid/${kidId}`;
+    let url = `https://${window.location.host}/deleteKid/${kidId}`;
     window.location.replace(url);
   }
 
