@@ -11,18 +11,38 @@
     <title>Main</title>
 </head>
 <body>
-    <div class="card m-3">
-        <div class="card-body p-4 p-md-5">
-            <h2 class="text-center">Upload daily pictures</h2>
-            <div class="mt-4">Upload up tp 10 images. </div>
-            <div>Remember, you can come back here and upload new pictures whenever you need.</div>
-            <form action="{{ url_for('uploadPictures' ,className=className) }}" method="post" enctype="multipart/form-data">
-                <div class="card p-5">
-                    <input onfocus="this.oldValue = this.value;" onchange="test(this)" name="picture-1" type="file" class="file" data-browse-on-zone-click="true">
-                    <div><button class="btn btn-primary btn-lg mt-2" type="submit">Submit</button></div>
+    <div class="main-container d-flex ">
+        <div class="left-bar mt-5">
+            <h4 class="list-header mt-2">Navigator</h4>
+            <ul class="ms-0">
+                <li> <a href="{{ url_for('middleware_endpoint' ,moveTo='mainPage', variable=className) }}">Main Page</a></li>
+                <li><a href="../uploadPictures/{{ className }}">Upload pictures</a></li>
+                <li><a href="{{ url_for('middleware_endpoint' ,moveTo='settings', variable=className) }}">Settings</a> </li>
+                <li><a href="">Reports</a></li>
+                <li><a href="">Help</a></li>
+                <li><a href="">Exit</a></li>
 
-                </div>
-            </form>
+            </ul>
+        </div>
+        <div class="main-content  m-3">
+            <div class=" p-4 ">
+                <h2 class="text-center">Upload daily pictures</h2>
+                {% if uploaded_images %}
+                    <div class="message text-success mt-4"> Uploaded {{ uploaded_images }} images successfully.</div>
+                {% endif %}
+                <div>Remember, you can come back here and upload new pictures whenever you need.</div>
+                <form action="{{ url_for('uploadPictures' ,className=className) }}" method="post" enctype="multipart/form-data">
+                    <div class="card p-5">
+                        <input onfocus="this.oldValue = this.value;" onchange="test(this)" name="picture-1" type="file" class="file" data-browse-on-zone-click="true">
+                    </div>
+                        <div class="btns-container d-flex w-25 mt-3">
+                            <div><button class="btn btn-primary btn-lg mt-2 me-3" type="submit">Submit</button></div>
+                            <a href="{{ url_for('middleware_endpoint' ,moveTo='mainPage', variable=className) }}"><button type="button" class="btn btn-danger btn-lg mt-2">Cancel</button></a>
+
+                        </div>
+
+                </form>
+            </div>
         </div>
     </div>
 </body>
@@ -49,4 +69,3 @@
     }
 </script>
 
-<!--                    <input onfocus="this.oldValue = this.value;" onchange="test(this)" name="picture-1" type="file" class="file" data-browse-on-zone-click="true">-->

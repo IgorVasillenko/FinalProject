@@ -69,7 +69,6 @@ def mainPage(username):
     return render_template("subfolder/mainPage.html", username=username, data=data, class_name=class_name )
 
 
-
 @app.route('/addKid/<username>', methods=["GET", "POST"])
 # this route handle the get and post request for adding kids.
 def addKid(username):
@@ -113,7 +112,7 @@ def editKid(kidId):
             return redirect(f'/mainPage/{class_teacher}')
         else:
             '''inputs weren't good, re-render the page with the error msg.'''
-            return render_template("subfolder/editKid.html", kidObj=kid_details, message=msg)
+            return render_template("subfolder/editKid.html", kidObj=kid_details, message=msg, teacher_username= class_teacher)
 
 
 @app.route('/uploadPictures/<className>', methods=["GET", "POST"])
@@ -122,9 +121,46 @@ def uploadPictures(className):
         return render_template("subfolder/uploadPictures.html", className=className)
     else:
         # the method is post, handle the files , add to db
-        handle_uploaded_pictures(request.files.to_dict(), className)
-        return 'post made'
+        uploaded_images = handle_uploaded_pictures(request.files.to_dict(), className)
+        if uploaded_images > 0:
+            # if any images uploaded, alert the user
+            return render_template("subfolder/uploadPictures.html", className=className, uploaded_images=uploaded_images)
+        return render_template("subfolder/uploadPictures.html", className=className)
 
+
+@app.route('/middleware/<moveTo>/<variable>/', methods=["GET"])
+def middleware_endpoint(moveTo, variable):
+    """
+    move to mainPage -> fetch the username and redirect
+    move to settings -> fetch the username and redirect
+    :param class_name:
+    :return:
+    """
+    if moveTo in ['mainPage', 'settings']:
+        username = fetch_username_using_classname(variable)
+        print(username, variable)
+        return redirect(f'/{moveTo}/{username}')
+    # if moveTo in ['uploadPictures']:
+        # print(variable):
+
+
+@app.route('/settings/<username>/', methods=["GET", "POST"])
+def settings(username):
+    user_details = find_one(collection='managers', query={"_id": username})
+    print(request.form.to_dict())
+    # handle_post_settings(user_inputs=request.form.to_dict(), user_details=user_details)
+    return render_template("subfolder/settings.html",
+                           username=username, user_details=user_details,
+                           className=user_details['class'])
+
+
+@app.route('/deleteKid/<kidId>', methods = ["GET"])
+# this route get kid_id and deletes from DB
+def deleteKid(kidId):
+    class_name = find_one(collection="kids", query={"_id": kidId})["class"]
+    username = fetch_username_using_classname(classname=class_name)
+    delete_one(collection="kids", query={"_id": kidId})
+    return redirect(f'/mainPage/{username}')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,27 @@
+*{
+    margin: 0px;
+}
+
+.main-container > .left-bar{
+    width: 20%;
+}
+
+.main-container > .main-content{
+    flex-grow: 1;
+}
+
+.main-container > .left-bar > .list-header{
+    padding-left: 15px;
+}
+
+.main-container > .left-bar > ul{
+    list-style-type: none;
+
+}
+
+.main-container > .left-bar > ul > li > a{
+    text-decoration: none;
+    color: black;
+
+}
+

@@ -1,8 +1,7 @@
 from db_queries.db_functions import *
 from datetime import date
-from flask import Flask
 import base64
-
+from functional.settings_functions import *
 
 def check_login(user_inputs: dict):
     """
@@ -378,6 +377,11 @@ def save_file_test(img_name, img_bytes):
 
 
 def handle_uploaded_pictures(files_dict, class_name):
+    """
+    :param files_dict: the files dictionary we got from the post request.
+    :param class_name: the class name
+    :return: return number of uploaded pictures.
+    """
     result_list = []
     for k, v in files_dict.items():
         if not v:
@@ -390,19 +394,27 @@ def handle_uploaded_pictures(files_dict, class_name):
             # convert to base 64 for easy fetch.
             bytes_base_64 = base64.b64encode(v.read())
             result_list.append(bytes_base_64)
-    number_of_new_imgs = len(result_list)
-    if number_of_new_imgs > 0:
+    number_of_new_images = len(result_list)
+    if number_of_new_images > 0:
         # if there are any valid pictures, update or create today attendance document.
-        # update_one('attendance',)
-        upload_pictures_to_db({"images": result_list}, class_name)
-    return result_list
+        push_pictures_to_db(files_list=result_list, class_name=class_name)
+    return number_of_new_images
 
 
-def upload_pictures_to_db(files_dict, class_name):
+def push_pictures_to_db(files_list: list, class_name: str):
+    """
+    The function extract current date then insert or update the document.
+    :param files_list: list of files
+    :param class_name:
+    :return:
+    """
+
     today = date.today()
     # dd/mm/YY format
     curr_date = today.strftime("%d/%m/%Y")
-    update_one('attendance', {"date": curr_date, "class_name": class_name}, files_dict, upsertBool=True)
+    push_to_array(collection='attendance',
+                  query={"date": curr_date, "class_name": class_name},
+                  list_to_push=files_list)
 
 
 if __name__ == '__main__':

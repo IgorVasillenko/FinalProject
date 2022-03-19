@@ -109,9 +109,22 @@ def find_all(collection: str, query: dict = {}):
     return connection.find(query)
 
 
+def push_to_array(collection: str, query: dict, list_to_push: list):
+    """
+    The function update or create document, pushing the new images to the images array.
+    :param collection:
+    :param query:
+    :param list_to_push:
+    :return:
+    """
+    connection = DB[collection]
+    print(connection.update_one(query, {'$push': {"images": {"$each": list_to_push}}}, upsert=True))
+
+
 if __name__ == '__main__':
     # print(delete_many('attendence', {}))
     attendenceIndex = DB['attendance']
+    # push_to_array('attendance', {"date": "17/03/2022", "class_name": "NY morning"}, [4, 4, 4])
     # attendenceIndex.create_index([('date', pymongo.DESCENDING), ('class',pymongo.DESCENDING)], unique=True)
     # con = DB["managers"].find()
     # print(find_one('kids',{"_id":"205634967"}))
