@@ -21,3 +21,6 @@ function removeClickedAtt(){
     }
 }
 
+const date = new Date();
+
+console.log(date)

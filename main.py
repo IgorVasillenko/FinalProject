@@ -3,6 +3,7 @@ from datetime import date
 import base64
 from functional.settings_functions import *
 
+
 def check_login(user_inputs: dict):
     """
     :param: this function receive username and password then check if it exists in the DB.
@@ -51,9 +52,10 @@ def check_register(user_input: dict):
         # if the password user entered is less then 6 chars.
         msg = 'Password must be at least 6 chars.'
         return False, msg
-    query = create_query(user_input, '_id')
-    if find_one('managers', query):
-        # if the query returned document and the username already exists in the DB
+    # query = create_query(user_input, '_id')
+    # if find_one('managers', query):
+    if not check_unique_username(user_inputs=user_input):
+        # if the username already exists in the DB
         msg = 'Username is already taken.'
         return False, msg
     if not check_unique_class(user_input):
@@ -63,7 +65,7 @@ def check_register(user_input: dict):
     return True, 'none'
 
 
-def check_unique_class(user_input:dict):
+def check_unique_class(user_input: dict):
     """
     Class name should be unique so in this function we check if the user input for class name is valid
     and doesnt exists in the DB for other manager.
@@ -98,24 +100,24 @@ def is_empty(property):
     return (len(property) == 0)
 
 
-def is_pass_valid(password):
-    """
+# def is_pass_valid(password):
+#     """
+#
+#     :param password: the user input password
+#     :return: true if the password.len >= 6. otherwise -> false.
+#     """
+#     return len(password) >= 5
 
-    :param password: the user input password
-    :return: true if the password.len >= 6. otherwise -> false.
-    """
-    return len(password) >= 5
 
-
-def create_query(dictionary: dict, prop: str):
-    """
-
-    :param dictionary   : given dictionary with some properties.
-    :param prop: the property we want to query.
-    :return: object where the ket is the prop name and the value is the value from given dict.
-            the return obj is ready to be used as a query to the DB.
-    """
-    return {prop: dictionary[prop]}
+# def create_query(dictionary: dict, prop: str):
+#     """
+#
+#     :param dictionary   : given dictionary with some properties.
+#     :param prop: the property we want to query.
+#     :return: object where the ket is the prop name and the value is the value from given dict.
+#             the return obj is ready to be used as a query to the DB.
+#     """
+#     return {prop: dictionary[prop]}
 
 def fetch_username_using_classname(classname):
     '''

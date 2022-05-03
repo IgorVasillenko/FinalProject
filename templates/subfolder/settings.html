@@ -38,6 +38,15 @@
                         <div class="form-outline">
                             <input type="password" name="new_password" placeholder="New Password" class="form-control form-control-lg" />
                         </div>
+                        {% if response_obj %}
+                            {% if response_obj["password_msg"] %}
+                                {% if response_obj["bool"] %}
+                                    <p class="text-success" style="width:250px">{{ response_obj["password_msg"] }}</p>
+                                {% else %}
+                                    <p class="text-danger" style="width:250px">{{ response_obj["password_msg"] }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                         <input class="submit btn btn-primary mt-2" type="submit" value="Update password"/>
                     </form>
                 </div>
@@ -52,6 +61,15 @@
                             <label>New schedule:</label>
                             <input type="time" name="new_schedule" placeholder="New Schedule" class="form-control form-control-lg" />
                         </div>
+                        {% if response_obj %}
+                            {% if response_obj["schedule_msg"] %}
+                                {% if response_obj["bool"] %}
+                                    <p class="text-success" style="width:250px">{{ response_obj["schedule_msg"] }}</p>
+                                {% else %}
+                                    <p class="text-danger" style="width:250px">{{ response_obj["schedule_msg"] }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                         <input class="submit btn btn-primary mt-2" type="submit" value="Update Schedule"/>
                     </form>
 
@@ -65,6 +83,15 @@
                         <div class="form-outline">
                             <input type="text" name="new_username" placeholder="Enter new username" class="form-control form-control-lg" />
                         </div>
+                        {% if response_obj %}
+                            {% if response_obj["username_msg"] %}
+                                {% if response_obj["bool"] %}
+                                    <p class="text-success" style="width:250px">{{ response_obj["username_msg"] }}</p>
+                                {% else %}
+                                    <p class="text-danger" style="width:250px">{{ response_obj["username_msg"] }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                         <input class="submit btn btn-primary mt-2" type="submit" value="Update Username"/>
                     </form>
                 </div>

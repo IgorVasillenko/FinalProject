@@ -147,11 +147,18 @@ def middleware_endpoint(moveTo, variable):
 @app.route('/settings/<username>/', methods=["GET", "POST"])
 def settings(username):
     user_details = find_one(collection='managers', query={"_id": username})
-    print(request.form.to_dict())
-    # handle_post_settings(user_inputs=request.form.to_dict(), user_details=user_details)
-    return render_template("subfolder/settings.html",
-                           username=username, user_details=user_details,
-                           className=user_details['class'])
+    if request.method == "GET":
+        return render_template("subfolder/settings.html",
+                               username=username, user_details=user_details,
+                               className=user_details['class'])
+    else:
+        # the request method is POST, handle the changes and re-render the page with a msg.
+        response_obj = handle_post_settings(user_inputs=request.form.to_dict(), user_details=user_details)
+        # fetch user data again since we updated
+        user_details = find_one(collection='managers', query={"_id": username})
+        return render_template("subfolder/settings.html", username=username, user_details=user_details,
+                               className=user_details['class'], response_obj=response_obj)
+
 
 
 @app.route('/deleteKid/<kidId>', methods = ["GET"])
@@ -161,6 +168,7 @@ def deleteKid(kidId):
     username = fetch_username_using_classname(classname=class_name)
     delete_one(collection="kids", query={"_id": kidId})
     return redirect(f'/mainPage/{username}')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

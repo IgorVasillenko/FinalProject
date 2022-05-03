@@ -60,7 +60,7 @@ def delete_many(collection: str, query: dict =None):
     return connection.delete_many({}).deleted_count
 
 
-def update_one(collection: str, query: dict, newValues: dict, upsertBool: bool):
+def update_one(collection: str, query: dict, newValues:dict, upsertBool:bool=False):
     """
     :param collection:
     :param query: the query that will help us select the needed document
