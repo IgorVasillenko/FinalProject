@@ -1,10 +1,14 @@
+APScheduler==3.9.1
+backports.zoneinfo==0.2.1
 click==8.0.3
 cmake==3.22.0
 colorama==0.4.4
-dlib==19.19.0
+dlib @ file:///C:/Users/user/Desktop/amit/python_project%27s/FinalProject/FinalProject/face_recog_dlib_file/dlib-19.19.0-cp38-cp38-win_amd64.whl
+dnspython==2.1.0
 face-recognition==1.3.0
 face-recognition-models==0.3.0
 Flask==2.0.2
+Flask-APScheduler==1.12.3
 gunicorn==20.1.0
 itsdangerous==2.0.1
 Jinja2==3.0.3
@@ -12,8 +16,14 @@ MarkupSafe==2.0.1
 mysql-connector-python==8.0.22
 numpy==1.21.4
 Pillow==8.4.0
+plotly==5.7.0
 protobuf==3.14.0
-six==1.15.0
-Werkzeug==2.0.2
 pymongo==4.0
-dnspython==2.1.0
+python-dateutil==2.8.2
+pytz==2022.1
+pytz-deprecation-shim==0.1.0.post0
+six==1.15.0
+tenacity==8.0.1
+tzdata==2022.1
+tzlocal==4.2
+Werkzeug==2.0.2
