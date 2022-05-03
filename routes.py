@@ -161,6 +161,14 @@ def settings(username):
 
 
 
+# @app.route('/deleteKid/<kidId>', methods = ["GET"])
+# # this route get kid_id and deletes from DB
+# def deleteKid(kidId):
+#     class_name = find_one(collection="kids", query={"_id": kidId})["class"]
+#     username = fetch_username_using_classname(classname=class_name)
+#     delete_one(collection="kids", query={"_id": kidId})
+#     return redirect(f'/mainPage/{username}')
+
 @app.route('/deleteKid/<kidId>', methods = ["GET"])
 # this route get kid_id and deletes from DB
 def deleteKid(kidId):
