@@ -1,6 +1,7 @@
 from .utilities_functions import *
 # from ..db_queries.db_functions import *
-from FinalProject.db_queries.db_functions import *
+# from FinalProject.db_queries.db_functions import *
+from db_queries.db_functions import *
 
 
 def handle_post_settings(user_inputs: dict, user_details: dict):
