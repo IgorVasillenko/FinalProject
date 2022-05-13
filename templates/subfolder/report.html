@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    <!-- <link rel="stylesheet" href="/static/addKid.css"> -->
+<!--    <link rel="stylesheet" href="addKid.css">-->
+        <link rel="stylesheet" href="/static/report.css">
+    <title>Main</title>
+</head>
+<body>
+    <div class="main-container d-flex ">
+        <div class="left-bar ">
+            <h4 class="list-header mt-2">Navigator</h4>
+            <ul class="ms-0">
+                <li> <a href="../mainPage/{{ username }}">Main Page</a></li>
+                <li><a href="../uploadPictures/{{ class_name }}">Upload pictures</a></li>
+                <li><a href="../settings/{{ username }}">Settings</a> </li>
+                <li><a href="">Report</a></li>
+                <li><a href="">Help</a></li>
+                <li><a href="">Exit</a></li>
+
+            </ul>
+        </div>
+        <div class="main-content ps-2">
+            <div class="w-50 ">
+            <!--header-->
+                <h2 class="text-center mb-4">Attendence reports</h2>
+                <!--CHANGE DATE BUTTON-->
+                <form class="mb-3" action="{{ url_for('report' ,username=username) }}" method="post" enctype="multipart/form-data">
+                  <div class="row first-input-row flex-nowrap" >
+                      <div class="">
+                        <input type="date" min="2000-01-01" max={{ max_date }} id="curr_date" value={{ curr_date }} class="form-control form-control-md" name="curr_date"/>
+                      </div>
+                      <div class="form-outline">
+                          <input class="submit btn btn-primary btn-md" type="submit" value="Show report"/>
+                      </div>
+                  </div>
+                </form>
+                <!--handle different UI for different options -->
+                {% if attendence %}
+                <!--the document exists, check if produced or not-->
+                    {% if attendence.attendence_report %}
+                    <!--the report already produced, show the results.-->
+                        <div class="table-container">
+                            <table class="table table-hover text-center">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Attendance</th>
+                                        <th scope="col">SMS </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if kids %}
+                                    {% for kid in kids %}
+                                        <tr>
+                                            <th scope="row">{{loop.index}}</th>
+                                            <td>{{kid._id}}</td>
+                                            <td>{{kid.first_name}}</td>
+                                            <td>{{kid.last_name}}</td>
+                                            {% for id in attendence.attendence_report.keys() %}
+                                                {% if id == kid._id %}
+                                                <!--match the attendence result to current kid-->
+                                                    <td> {{ attendence.attendence_report[id] }}</td>
+                                                    {% if attendence.sms_sent and not attendence.attendence_report[id]%}
+                                                        <td> V </td>
+                                                    {% else %}
+                                                        <td>  </td>
+
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    {% else %}
+                    <!--the report wasn't produced,but there is data to process.-->
+                        <div class=mt-4">
+                            <span class="text-success">
+                                Final report will produced as scheduled at {{ schedule }}
+                            </span>
+                            <br>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-center">Would you like to produce manual report?</span>
+                                <form action="{{ url_for('produce_report') }}" method="post">
+                                    <!--hidden inputs so we can send extra data-->
+                                    <!--and prevent un-needed fetching from db-->
+                                    <input name="curr_date" value={{ curr_date }} hidden>
+                                    <input name="class" value='{{ attendence.class_name }}' hidden>
+                                    <input name="username" value={{ username }} hidden>
+                                    <input class="submit btn btn-success btn-sm" type="submit" value="Produce report!"/>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                <!--There is no available data for curr_date-->
+                    <div class="message text-danger mt-4"> No data received for this date.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    function setMaxDate(){
+        console.log('works');
+    }
+</script>
+
+

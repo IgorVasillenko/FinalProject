@@ -1,5 +1,5 @@
 from db_queries.db_functions import *
-from datetime import date
+from datetime import date, datetime
 import base64
 from functional.settings_functions import *
 
@@ -417,6 +417,16 @@ def push_pictures_to_db(files_list: list, class_name: str):
     push_to_array(collection='attendance',
                   query={"date": curr_date, "class_name": class_name},
                   list_to_push=files_list)
+
+
+def transform_date_to_html_format(curr_date):
+    return datetime.strptime(curr_date, "%d/%m/%Y").strftime('%Y-%m-%d')
+
+
+
+def transform_date_to_db_format(curr_date):
+    date_object = datetime.fromisoformat(curr_date)
+    return date_object.strftime("%d/%m/%Y")
 
 
 if __name__ == '__main__':

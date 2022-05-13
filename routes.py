@@ -1,8 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from main import *
-import FoldersManager
-import os
+from img_comparing import create_attendance_report
 
 
 app = Flask(__name__)
@@ -117,15 +116,17 @@ def editKid(kidId):
 
 @app.route('/uploadPictures/<className>', methods=["GET", "POST"])
 def uploadPictures(className):
+    username = fetch_username_using_classname(className)
     if request.method == "GET":
-        return render_template("subfolder/uploadPictures.html", className=className)
+        return render_template("subfolder/uploadPictures.html", className=className, username=username)
     else:
         # the method is post, handle the files , add to db
         uploaded_images = handle_uploaded_pictures(request.files.to_dict(), className)
         if uploaded_images > 0:
             # if any images uploaded, alert the user
-            return render_template("subfolder/uploadPictures.html", className=className, uploaded_images=uploaded_images)
-        return render_template("subfolder/uploadPictures.html", className=className)
+            return render_template("subfolder/uploadPictures.html", className=className,
+                                   uploaded_images=uploaded_images, username=username)
+        return render_template("subfolder/uploadPictures.html", className=className, username=username)
 
 
 @app.route('/middleware/<moveTo>/<variable>/', methods=["GET"])
@@ -160,24 +161,58 @@ def settings(username):
                                className=user_details['class'], response_obj=response_obj)
 
 
-
-# @app.route('/deleteKid/<kidId>', methods = ["GET"])
-# # this route get kid_id and deletes from DB
-# def deleteKid(kidId):
-#     class_name = find_one(collection="kids", query={"_id": kidId})["class"]
-#     username = fetch_username_using_classname(classname=class_name)
-#     delete_one(collection="kids", query={"_id": kidId})
-#     return redirect(f'/mainPage/{username}')
-
 @app.route('/deleteKid/<kidId>', methods = ["GET"])
 # this route get kid_id and deletes from DB
 def deleteKid(kidId):
     class_name = find_one(collection="kids", query={"_id": kidId})["class"]
     username = fetch_username_using_classname(classname=class_name)
+    print(username)
     delete_one(collection="kids", query={"_id": kidId})
     return redirect(f'/mainPage/{username}')
 
 
+@app.route('/report/<username>', methods=["GET", "POST"])
+# this route handle the report-UI and the options to view older reports.
+# the post option is for reports of other dates.
+# and the default value of the date is today's date.
+def report(username):
+    teacher_details = find_one('managers', {"_id": username})
+    curr_date = date.today().strftime("%d/%m/%Y")
+    today_attendance = None
+    max_date_for_html = transform_date_to_html_format(curr_date)
+    kids_details = fetch_class_kids(username)
+
+    if request.method == "GET":
+        today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": curr_date})
+        # after using curr_date to fetch from db, change it to html format.
+        curr_date = max_date_for_html
+
+    else:
+        print(request.form.to_dict())
+        curr_date = request.form["curr_date"]
+        db_date = transform_date_to_db_format(curr_date)
+        today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
+
+    return render_template("subfolder/report.html", username=username, curr_date=curr_date,
+                           class_name=teacher_details["class"], max_date=max_date_for_html,
+                           attendence=today_attendance, schedule=teacher_details["schedule"],
+                           kids=kids_details)
+
+
+@app.route('/produceReport', methods=["POST"])
+# this route activate the producing of the attendance report
+def produce_report():
+    '''
+    NOTE TO ===AMIT====
+    when creating the schedule chain the sms sending right after
+    and remeber to add sms_sent property set to true.
+    :return:
+    '''
+    username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
+    db_date = transform_date_to_db_format(curr_date)
+    create_attendance_report(class_name, db_date)
+    return redirect(f"report/{username}", code=307, )
+
+
 if __name__ == '__main__':
-    # test
     app.run(debug=True)

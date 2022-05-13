@@ -20,7 +20,7 @@
                 <li> <a href="">Main Page</a></li>
                 <li><a href="../uploadPictures/{{ class_name }}">Upload pictures</a></li>
                 <li><a href="../settings/{{ username }}">Settings</a> </li>
-                <li><a href="">Reports</a></li>
+                <li><a href="../report/{{ username }}">Report</a></li>
                 <li><a href="">Help</a></li>
                 <li><a href="">Exit</a></li>
 
@@ -81,7 +81,7 @@ function delete_kid(kidId, username) {
   if (answer !== username){
     alert('you have entered wrong username')
   } else {
-    let url = `https://${window.location.host}/deleteKid/${kidId}`;
+    let url = `http://${window.location.host}/deleteKid/${kidId}`;
     window.location.replace(url);
   }
 
