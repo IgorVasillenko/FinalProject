@@ -1,5 +1,5 @@
-from FinalProject.db_queries.db_functions import *
-
+# from FinalProject.db_queries.db_functions import *
+from db_queries.db_functions import *
 
 def is_pass_valid(password):
     """
