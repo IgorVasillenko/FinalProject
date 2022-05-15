@@ -429,5 +429,19 @@ def transform_date_to_db_format(curr_date):
     return date_object.strftime("%d/%m/%Y")
 
 
+def get_datetime_for_scheduler(schedule_string):
+    today = date.today()
+    schedule_datetime = datetime(today.year, today.month, today.day,
+                                 hour=int(schedule_string[0:2]), minute=int(schedule_string[4:]))
+    print(schedule_datetime)
+    return schedule_datetime
+
+
 if __name__ == '__main__':
-    print('yay')
+    x = get_datetime_for_scheduler("11:04")
+    db_date_format = x.strftime("%d/%m/%Y")
+    print(db_date_format)
+
+
+
+
