@@ -432,7 +432,7 @@ def transform_date_to_db_format(curr_date):
 def handle_schedule_dates(schedule_string):
     today = date.today()
     schedule_datetime = datetime(today.year, today.month, today.day,
-                                 hour=int(schedule_string[0:2]), minute=int(schedule_string[4:]))
+                                 hour=int(schedule_string[0:2]), minute=int(schedule_string[3:]))
     db_format = get_db_date_format(schedule_datetime)
     execute_format = get_execute_date_format(schedule_datetime)
     return execute_format, db_format
@@ -450,8 +450,9 @@ if __name__ == '__main__':
     teachers = find_all('managers', {})
     clean_teachers = handle_cursor_obj(teachers)
     for i in clean_teachers:
-        execute_datetime_object = get_datetime_for_scheduler(i["schedule"])
-
+        execute_datetime_object, db_date = handle_schedule_dates(i["schedule"])
+        print(db_date)
+        print(execute_datetime_object)
 
     # x = get_datetime_for_scheduler("11:04")
     # db_date_format = x.strftime("%d/%m/%Y")
