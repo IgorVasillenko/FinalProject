@@ -176,6 +176,9 @@ def deleteKid(kidId):
 # the post option is for reports of other dates.
 # and the default value of the date is today's date.
 def report(username):
+    now = datetime.now()
+    print("report route start", now.strftime("%H:%M:%S"))
+
     teacher_details = find_one('managers', {"_id": username})
     curr_date = date.today().strftime("%d/%m/%Y")
     today_attendance = None
@@ -188,11 +191,14 @@ def report(username):
         curr_date = max_date_for_html
 
     else:
-        print(request.form.to_dict())
+        # print(request.args.get("curr_date"))
         curr_date = request.form["curr_date"]
         db_date = transform_date_to_db_format(curr_date)
         today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
 
+
+    now = datetime.now()
+    print("END OF REPORT ROUTE: ", now.strftime("%H:%M:%S"))
     return render_template("subfolder/report.html", username=username, curr_date=curr_date,
                            class_name=teacher_details["class"], max_date=max_date_for_html,
                            attendence=today_attendance, schedule=teacher_details["schedule"],
@@ -208,10 +214,23 @@ def produce_report():
     and remeber to add sms_sent property set to true.
     :return:
     '''
-    username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
+    now = datetime.now()
+    print("start time:", now.strftime("%H:%M:%S"))
+
+    data = request.get_json()
+    username, curr_date, class_name = data["username"], data["curr_date"], data["class"]
     db_date = transform_date_to_db_format(curr_date)
+    print('DONE FETCHING, START THE REPORT')
     create_attendance_report(class_name, db_date)
-    return redirect(f"report/{username}", code=307, )
+    print('REPORT IS DONE')
+
+    return {"success": True, "please_work": False}
+
+    # username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
+    # db_date = transform_date_to_db_format(curr_date)
+    # create_attendance_report(class_name, db_date)
+    # return 'hello'
+    # return redirect(f"report/{username}", code=307, )
 
 
 if __name__ == '__main__':
