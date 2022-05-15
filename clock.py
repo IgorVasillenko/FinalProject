@@ -10,7 +10,7 @@ def timed_job():
     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='01', minute='05')
+@sched.scheduled_job('cron', hour='16', minute='40')
 def schedule_for_today():
     teachers = find_all('managers',{})
     clean_teachers =  handle_cursor_obj(teachers)
