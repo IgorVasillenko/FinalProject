@@ -12,16 +12,16 @@ sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 #     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='18', minute='47')
+@sched.scheduled_job('cron', hour='18', minute='55')
 def schedule_for_today():
     print("===========")
-    print("schedule works 18:47")
+    print("schedule works 18:55")
     print("===========")
 
     teachers = find_all('managers', {})
     clean_teachers = handle_cursor_obj(teachers)
 
-    schedule_datetime = get_datetime_for_scheduler(teachers["schedule"])
+    schedule_datetime = get_datetime_for_scheduler(clean_teachers["schedule"])
     db_curr_date_format = schedule_datetime.strftime("%d/%m/%Y")
 
     for teacher in clean_teachers:
