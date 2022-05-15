@@ -32,6 +32,14 @@ def schedule_for_today():
     print(sched.get_jobs())
 
 
+def produce_by_click(class_name, curr_date):
+    # execute now
+    sched.add_job(create_attendance_report, args=[class_name, curr_date])
+
+
+
+
+
 # will run everyday at 01:05 AM.
 # sched.add_job(my_job, trigger='cron', hour='01', minute='05')
 

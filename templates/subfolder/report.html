@@ -94,15 +94,15 @@
                             <br>
                             <div class="d-flex justify-content-between">
                                 <span class="text-center">Would you like to produce manual report?</span>
-                                <!--<form action="{{ url_for('produce_report') }}" method="post">-->
-                                <form>
+                                <form action="{{ url_for('produce_report') }}" method="post">
+<!--                                <form>-->
                                     <!--hidden inputs so we can send extra data-->
                                     <!--and prevent un-needed fetching from db-->
                                     <input class="--postInput" name="curr_date" value={{ curr_date }} hidden>
                                     <input class="--postInput" name="class" value='{{ attendence.class_name }}' hidden>
                                     <input class="--postInput" name="username" value={{ username }} hidden>
-<!--                                    <input class="submit btn btn-success btn-sm" type="submit" value="Produce report!"/>-->
-                                    <input class="submit btn btn-success btn-sm" type="button" onclick="test()" value="Produce report!"/>
+                                    <input class="submit btn btn-success btn-sm" type="submit" value="Produce report!"/>
+<!--                                    <input class="submit btn btn-success btn-sm" type="button" onclick="test()" value="Produce report!"/>-->
                                 </form>
                             </div>
                         </div>
@@ -116,42 +116,42 @@
     </div>
 </body>
 <script>
-    let usr = '{{username}}';
+<!--    let usr = '{{username}}';-->
 
-    function getInputs() {
-        let data = {};
-        let inputsArr = document.getElementsByClassName("--postInput");
-        for (let i of inputsArr) {
-            data[i.name] = i.value;
-        }
-        return data
+<!--    function getInputs() {-->
+<!--        let data = {};-->
+<!--        let inputsArr = document.getElementsByClassName("&#45;&#45;postInput");-->
+<!--        for (let i of inputsArr) {-->
+<!--            data[i.name] = i.value;-->
+<!--        }-->
+<!--        return data-->
 
-    };
+<!--    };-->
 
-    function reloadPage(){
-        let url = `http://${window.location.host}/report/${usr}`;
-        console.log(url)
-        window.location.replace(url);
-    }
+<!--    function reloadPage(){-->
+<!--        let url = `http://${window.location.host}/report/${usr}`;-->
+<!--        console.log(url)-->
+<!--        window.location.replace(url);-->
+<!--    }-->
 
-    function test(){
-        let data = getInputs()
-                $.ajax({
-            type: "POST",
-            url: "{{url_for('produce_report')}}",
-            data : JSON.stringify(data),
-                timeout:150000,
-            contentType: 'application/json',
-            success: function (res){
-                console.log(res)
-                reloadPage()
-                },
-            error: function (err)
-                {console.log("err is: ", err)
-                setTimeout(reloadPage, 60000);
-                }
-        });
-    }
+<!--    function test(){-->
+<!--        let data = getInputs()-->
+<!--                $.ajax({-->
+<!--            type: "POST",-->
+<!--            url: "{{url_for('produce_report')}}",-->
+<!--            data : JSON.stringify(data),-->
+<!--                timeout:150000,-->
+<!--            contentType: 'application/json',-->
+<!--            success: function (res){-->
+<!--                console.log(res)-->
+<!--                reloadPage()-->
+<!--                },-->
+<!--            error: function (err)-->
+<!--                {console.log("err is: ", err)-->
+<!--                setTimeout(reloadPage, 60000);-->
+<!--                }-->
+<!--        });-->
+<!--    }-->
 
 </script>
 

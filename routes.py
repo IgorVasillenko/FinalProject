@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from main import *
 from img_comparing import create_attendance_report
+from clock import *
 
 
 app = Flask(__name__)
@@ -216,21 +217,25 @@ def produce_report():
     '''
     now = datetime.now()
     print("start time:", now.strftime("%H:%M:%S"))
+    username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
+    db_date_format = transform_date_to_db_format(curr_date)
+    produce_by_click(class_name=class_name, curr_date=db_date_format)
+    return redirect(f"load/{username}")
 
-    data = request.get_json()
-    username, curr_date, class_name = data["username"], data["curr_date"], data["class"]
-    db_date = transform_date_to_db_format(curr_date)
-    print('DONE FETCHING, START THE REPORT')
-    create_attendance_report(class_name, db_date)
-    print('REPORT IS DONE')
 
-    return {"success": True, "please_work": False}
+@app.route('/load/<username>', methods=["GET"])
+def load(username):
+    return render_template('subfolder/load.html', username=username)
 
-    # username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
-    # db_date = transform_date_to_db_format(curr_date)
-    # create_attendance_report(class_name, db_date)
-    # return 'hello'
-    # return redirect(f"report/{username}", code=307, )
+
+@app.route('/check_attendance', methods=["GET"])
+def check_attendance():
+    now = datetime.now()
+    curr_date = get_db_date_format(now)
+
+    # today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
+    return {"bool": True, "curr_date": curr_date}
+
 
 
 if __name__ == '__main__':
