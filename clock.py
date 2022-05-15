@@ -10,14 +10,23 @@ def timed_job():
     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='16', minute='45')
+@sched.scheduled_job('cron', hour='16', minute='52')
 def schedule_for_today():
+    print("schedule works 16:52")
     teachers = find_all('managers',{})
-    clean_teachers =  handle_cursor_obj(teachers)
+    clean_teachers =handle_cursor_obj(teachers)
     for teacher in clean_teachers:
         print(teacher)
         # sched.add_job(my_job, trigger='date', hour='01', minute='05')
 
+
+@sched.scheduled_job('cron', hour='13', minute='52')
+def schedule_for_today2():
+    print("schedule works 13:52")
+    teachers = find_all('managers',{})
+    clean_teachers =handle_cursor_obj(teachers)
+    for teacher in clean_teachers:
+        print(teacher)
 
 # will run everyday at 01:05 AM.
 # sched.add_job(my_job, trigger='cron', hour='01', minute='05')
