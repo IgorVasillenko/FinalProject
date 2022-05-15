@@ -230,12 +230,20 @@ def load(username):
 
 @app.route('/check_attendance', methods=["GET"])
 def check_attendance():
+    """gets a querystring containing the username"""
+
     now = datetime.now()
     curr_date = get_db_date_format(now)
 
-    # today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
-    return {"bool": True, "curr_date": curr_date}
+    username = request.args.get('username')
+    class_name = find_one('managers', {"_id": username})["class"]
 
+    today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date}, projection={"images":0})
+    if "last_update" in today_attendance:
+        print("last_update exists")
+        return {"bool": True, "curr_date": curr_date}
+    print("last_update doesnt exists")
+    return {"bool": False}
 
 
 if __name__ == '__main__':

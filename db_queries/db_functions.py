@@ -86,16 +86,17 @@ def update_many(collection:str, query: dict, newValues: dict):
     return connection.update_many(query, newValues).modified_count
 
 
-def find_one(collection: str, query: dict = {}):
+def find_one(collection: str, query: dict = {}, projection=None):
     """
     :param collection:  the collection we want to find form
     :param query: if we don't want any query, the default value is none.
+    :param projection: OPTIONAL -> dictionary specify which fields to include\ exclude
     :return: one document that follows the given query if given.
     """
 
     connection = DB[collection]
     # print(connection.find_one(query)['_id'])
-    return connection.find_one(query)
+    return connection.find_one(query, projection=projection)
 
 
 def find_all(collection: str, query: dict = {}):
@@ -122,11 +123,8 @@ def push_to_array(collection: str, query: dict, list_to_push: list):
 # "$set": {"new_data_available": True},
 
 if __name__ == '__main__':
-    # print(delete_many('attendence', {}))
-    attendenceIndex = DB['attendance']
+    # attendenceIndex = DB['attendance']
     # push_to_array('attendance', {"date": "17/03/2022", "class_name": "NY morning"}, [4, 4, 4])
-    attendenceIndex.create_index([('date', pymongo.DESCENDING), ('class',pymongo.DESCENDING)], unique=True)
+    # attendenceIndex.create_index([('date', pymongo.DESCENDING), ('class',pymongo.DESCENDING)], unique=True)
     # con = DB["managers"].find()
-    # print(find_one('kids',{"_id":"205634967"}))
-    # for doc in con:
-    #     print(doc)
+    print(find_one('attendance',{"date": "15/05/2022"}))

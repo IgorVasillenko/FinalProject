@@ -45,5 +45,5 @@ def produce_by_click(class_name, curr_date):
 
 # @sched.scheduled_job('interval', minutes=2)
 
-
-sched.start()
+if __name__ == '__main__':
+    sched.start()

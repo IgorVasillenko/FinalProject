@@ -21,20 +21,22 @@ i am loading now
     var usr = '{{username}}';
 
     function isDataReady(){
+        console.log('called interval')
         $.ajax({
             type: "GET",
             url: "{{url_for('check_attendance')}}",
             timeout:150000,
-            data:{"blah":1},
+            data:{ username: usr },
             contentType: 'application/json',
-            success: function (res){
+            success: function (res,err){
                 if (res.bool){
-
+                    console.log(res);
                     clearInterval(myInterval);
                     let url = `http://${window.location.host}/report/${usr}`;
                     window.location.replace(url);
-                    }
-                },
+                 }else { console.log (res)}
+
+             },
             error: function (err){
                 console.log("err is: ", err)
                 }
