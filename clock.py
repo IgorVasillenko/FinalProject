@@ -34,7 +34,10 @@ def schedule_for_today():
 
 def produce_by_click(class_name, curr_date):
     # execute now
+    print("TRYING TO PRODUCE THE REPORT")
     sched.add_job(create_attendance_report, args=[class_name, curr_date])
+    print("ADDED TASKS:")
+    print(sched.get_jobs())
 
 
 
