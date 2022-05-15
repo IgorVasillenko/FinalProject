@@ -12,10 +12,10 @@ sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 #     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='18', minute='25')
+@sched.scheduled_job('cron', hour='18', minute='47')
 def schedule_for_today():
     print("===========")
-    print("schedule works 18:25")
+    print("schedule works 18:47")
     print("===========")
 
     teachers = find_all('managers', {})
@@ -27,7 +27,7 @@ def schedule_for_today():
     for teacher in clean_teachers:
         print("in the teachers loop")
         class_name = teacher["class"]
-        sched.add_job(create_attendance_report(), trigger='date', run_date=schedule_datetime,
+        sched.add_job(create_attendance_report, trigger='date', run_date=schedule_datetime,
                       args=[class_name, db_curr_date_format])
     print("ADDED TASKS:")
     print(sched.get_jobs())
