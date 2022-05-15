@@ -14,7 +14,7 @@ sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 
 @sched.scheduled_job('cron', hour='17', minute='14')
 def schedule_for_today():
-    print("schedule works 18:10")
+    print("schedule works 18:14")
     teachers = find_all('managers', {})
     clean_teachers = handle_cursor_obj(teachers)
 
@@ -25,7 +25,7 @@ def schedule_for_today():
         class_name = teacher["class"]
         sched.add_job(create_attendance_report(), trigger='date', run_date=schedule_datetime,
                       args=[class_name, db_curr_date_format])
-    print( sched.get_jobs())
+    print(sched.get_jobs())
 
 
 # will run everyday at 01:05 AM.
