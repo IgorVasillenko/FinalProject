@@ -12,7 +12,7 @@ def timed_job():
 
 @sched.scheduled_job('cron', hour='16', minute='52')
 def schedule_for_today():
-    print("schedule works 17:02")
+    print("schedule works 17:07")
     teachers = find_all('managers',{})
     clean_teachers =handle_cursor_obj(teachers)
     for teacher in clean_teachers:
@@ -22,7 +22,7 @@ def schedule_for_today():
 
 @sched.scheduled_job('cron', hour='13', minute='52')
 def schedule_for_today2():
-    print("schedule works 14:02")
+    print("schedule works 14:07")
     teachers = find_all('managers',{})
     clean_teachers =handle_cursor_obj(teachers)
     for teacher in clean_teachers:
