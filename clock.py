@@ -12,10 +12,10 @@ sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 #     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='19', minute='23')
+@sched.scheduled_job('cron', hour='19', minute='30')
 def schedule_for_today():
     print("===========")
-    print("schedule works 19:23")
+    print("schedule works 19:30")
     print("===========")
 
     teachers = find_all('managers', {})
