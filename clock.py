@@ -22,7 +22,7 @@ def schedule_for_today():
 # will run everyday at 01:05 AM.
 # sched.add_job(my_job, trigger='cron', hour='01', minute='05')
 
-@sched.scheduled_job('interval', minutes=2)
+# @sched.scheduled_job('interval', minutes=2)
 
 
 sched.start()
