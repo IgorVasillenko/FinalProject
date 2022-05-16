@@ -78,12 +78,16 @@ def update_one_and_return(collection: str, query: dict, newValues: dict):
     # this function is same as update_one.
     # the only differ is that the function returns the updated document.
     connection = DB[collection]
-    return connection.find_one_and_update(query, newValues)
+    valid_new_values = {"$set": newValues}
+
+    return connection.find_one_and_update(query, valid_new_values)
 
 
 def update_many(collection:str, query: dict, newValues: dict):
     connection = DB[collection]
-    return connection.update_many(query, newValues).modified_count
+    valid_new_values = {"$set": newValues}
+
+    return connection.update_many(query, valid_new_values).modified_count
 
 
 def find_one(collection: str, query: dict = {}, projection=None):

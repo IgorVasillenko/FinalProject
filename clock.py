@@ -36,11 +36,10 @@ def produce_by_click():
     clean_tasks = handle_cursor_obj(fetch)
     for task in clean_tasks:
         print("====in TASKS loop=====")
-        if task["status"] == 'pending':
-            class_name = task["class_name"]
-            print(update_one('tasks', {"_id": task["_id"]}, {"status": "done"}))
-            print('updated status to done')
-            sched.add_job(create_attendance_report, args=[class_name, db_format_date])
+        class_name = task["class_name"]
+        print(update_many('tasks', {"date": db_format_date, "status": "pending"}, {"status": "done"}))
+        print('updated status to done')
+        sched.add_job(create_attendance_report, args=[class_name, db_format_date])
 
 # def produce_by_click(class_name, curr_date):
 #     # execute now
