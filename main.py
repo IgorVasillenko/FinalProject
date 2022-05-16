@@ -447,10 +447,15 @@ def get_db_date_format(date_object):
 
 
 if __name__ == '__main__':
-    print(datetime.now())
-    execute_date_format = get_execute_date_format(datetime.now() + timedelta(seconds=25))
+    x = find_all('manual', {"date": "16/05/2022", "status": "pending"})
+    y = handle_cursor_obj(x)
+    print(y)
+    print(update_many('tasks', {"date": "16/05/2022", "status": "pending"}, {"status": "done"}))
+    x = find_all('manual', {"date": "16/05/2022", "status": "pending"})
+    y = handle_cursor_obj(x)
+    print(y)
+    # print(update_many('tasks', {"date": "16/05/2022", "status": "pending"}, {"status": "done"}))
 
-    print(execute_date_format)
 
     # x = get_datetime_for_scheduler("11:04")
     # db_date_format = x.strftime("%d/%m/%Y")

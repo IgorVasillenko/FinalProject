@@ -37,7 +37,7 @@ def produce_by_click():
     for task in clean_tasks:
         print("====in TASKS loop=====")
         class_name = task["class_name"]
-        print(update_many('tasks', {"date": db_format_date, "status": "pending"}, {"status": "done"}))
+        print(update_one('tasks', {"date": db_format_date, "class_name": task["class_name"]}, {"status": "done"}))
         print('updated status to done')
         sched.add_job(create_attendance_report, args=[class_name, db_format_date])
 

@@ -79,6 +79,7 @@ def update_one_and_return(collection: str, query: dict, newValues: dict):
     # the only differ is that the function returns the updated document.
     connection = DB[collection]
     valid_new_values = {"$set": newValues}
+    print(f"")
 
     return connection.find_one_and_update(query, valid_new_values)
 
@@ -86,6 +87,7 @@ def update_one_and_return(collection: str, query: dict, newValues: dict):
 def update_many(collection:str, query: dict, newValues: dict):
     connection = DB[collection]
     valid_new_values = {"$set": newValues}
+    print(valid_new_values)
 
     return connection.update_many(query, valid_new_values).modified_count
 
@@ -127,6 +129,7 @@ def push_to_array(collection: str, query: dict, list_to_push: list):
 # "$set": {"new_data_available": True},
 
 if __name__ == '__main__':
+
     # attendenceIndex = DB['attendance']
     # push_to_array('attendance', {"date": "17/03/2022", "class_name": "NY morning"}, [4, 4, 4])
     # attendenceIndex.create_index([('date', pymongo.DESCENDING), ('class',pymongo.DESCENDING)], unique=True)
