@@ -2,6 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from db_queries.db_functions import *
 from main import *
 from img_comparing import *
+from datetime import datetime
 
 
 
@@ -26,7 +27,7 @@ def schedule_for_today():
 
         execute_date_format, db_date_format = handle_schedule_dates(teacher["schedule"])
         print("TEACHER SCHEDULE IS AT: ", teacher["schedule"])
-        sched.add_job(create_attendance_report, trigger='date', run_date=execute_date_format,
+        sched.add_job(create_attendance_report, trigger='date', run_date=datetime.now(),
                       args=[class_name, db_date_format])
     print("ADDED TASKS:")
     print(sched.get_jobs())
