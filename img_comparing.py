@@ -14,9 +14,11 @@ def create_attendance_report(class_name, curr_date):
 
     :return:
     """
+    print('STARTING THE REPORT ')
     information_for_db = {}
     unknown_images = create_encoding_unknown_imgs(class_name, curr_date)
     array_of_kids_details = gather_kids_objects_to_array(class_name)
+    print("DONE FETCHING IMAGES FOR THE REPORT ")
     for kid in array_of_kids_details:
         print(f"===={kid['first_name']}=====")
         clean_kid_array = create_encoding_kid_imgs(kid)
