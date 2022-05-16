@@ -197,7 +197,6 @@ def report(username):
         db_date = transform_date_to_db_format(curr_date)
         today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
 
-
     now = datetime.now()
     print("END OF REPORT ROUTE: ", now.strftime("%H:%M:%S"))
     return render_template("subfolder/report.html", username=username, curr_date=curr_date,
@@ -217,6 +216,7 @@ def produce_report():
     '''
     now = datetime.now()
     print("start time:", now.strftime("%H:%M:%S"))
+
     username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
     db_date_format = transform_date_to_db_format(curr_date)
     produce_by_click(class_name=class_name, curr_date=db_date_format)

@@ -1,5 +1,5 @@
 from db_queries.db_functions import *
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import base64
 from functional.settings_functions import *
 
@@ -447,12 +447,9 @@ def get_db_date_format(date_object):
 
 
 if __name__ == '__main__':
-    teachers = find_all('managers', {})
-    clean_teachers = handle_cursor_obj(teachers)
-    for i in clean_teachers:
-        execute_datetime_object, db_date = handle_schedule_dates(i["schedule"])
-        print(db_date)
-        print(execute_datetime_object)
+    print(datetime.now())
+    execute_date_format = get_execute_date_format(datetime.now() + timedelta(seconds=25))
+    print(execute_date_format)
 
     # x = get_datetime_for_scheduler("11:04")
     # db_date_format = x.strftime("%d/%m/%Y")
