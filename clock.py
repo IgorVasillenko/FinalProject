@@ -38,8 +38,6 @@ def produce_by_click(class_name, curr_date):
                   args=[class_name, curr_date])
     print("ADDED TASKS:")
     print(sched.get_jobs())
-    for job in sched.get_jobs():
-        print(job.next_run_time())
 
 
 def trying():
