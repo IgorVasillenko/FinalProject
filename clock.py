@@ -4,20 +4,16 @@ from main import *
 from img_comparing import *
 from datetime import datetime
 
-
-
-sched = BlockingScheduler()
-# sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
-#
+sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 # @sched.scheduled_job('interval', minutes=2)
 # def timed_job():
 #     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='11', minute='28')
+@sched.scheduled_job('cron', hour='12', minute='05')
 def schedule_for_today():
     print("===========")
-    print("schedule works 11:28")
+    print("schedule works 12:10")
     print("===========")
 
     teachers = find_all('managers', {})
@@ -25,10 +21,9 @@ def schedule_for_today():
     for teacher in clean_teachers:
         print("====in the teachers loop=====")
         class_name = teacher["class"]
-
-        execute_date_format, db_date_format = handle_schedule_dates(teacher["schedule"])
+        execute_date, db_date_format = handle_schedule_dates(teacher["schedule"])
         print("TEACHER SCHEDULE IS AT: ", teacher["schedule"])
-        sched.add_job(create_attendance_report, trigger='date', run_date=execute_date_format,
+        sched.add_job(create_attendance_report, trigger='date', run_date=execute_date,
                       args=[class_name, db_date_format])
     print("ADDED TASKS:")
     print(sched.get_jobs())
@@ -37,8 +32,8 @@ def schedule_for_today():
 def produce_by_click(class_name, curr_date):
     # execute now
     print("TRYING TO ADD SCHEDULE TASK")
-    execute_date_format = get_execute_date_format(datetime.now() + timedelta(seconds=25))
-    sched.add_job(create_attendance_report, trigger="date", run_date=execute_date_format,
+    execute_date= get_execute_date_format(datetime.now() + timedelta(seconds=30))
+    sched.add_job(create_attendance_report, trigger="date", run_date=execute_date,
                   args=[class_name, curr_date])
     print("ADDED TASKS:")
     for job in sched.get_jobs():
