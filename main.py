@@ -446,15 +446,14 @@ def get_db_date_format(date_object):
     return date_object.strftime("%d/%m/%Y")
 
 
+def handle_update_from_clock(db_format_date, class_name):
+    # update_one(collection='managers', query={"_id": user_details["_id"]},
+    #            newValues={"password": user_inputs["new_password"]})
+    print(update_one('manual', {"date": "16/05/2022", "status": "done"}, {"status": "xxxx"}))
+
+
 if __name__ == '__main__':
-    x = find_all('manual', {"date": "16/05/2022", "status": "pending"})
-    y = handle_cursor_obj(x)
-    print(y)
-    print(update_many('tasks', {"date": "16/05/2022", "status": "pending"}, {"status": "done"}))
-    x = find_all('manual', {"date": "16/05/2022", "status": "pending"})
-    y = handle_cursor_obj(x)
-    print(y)
-    # print(update_many('tasks', {"date": "16/05/2022", "status": "pending"}, {"status": "done"}))
+    handle_update_from_clock(1,2)
 
 
     # x = get_datetime_for_scheduler("11:04")
