@@ -220,8 +220,8 @@ def produce_report():
     username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
     db_date_format = transform_date_to_db_format(curr_date)
     produce_by_click(class_name=class_name, curr_date=db_date_format)
-    # return redirect(f"load/{username}")
-    return redirect(f"mainPage/{username}")
+    return redirect(f"load/{username}")
+    # return redirect(f"mainPage/{username}")
 
 
 @app.route('/load/<username>', methods=["GET"])
@@ -240,6 +240,7 @@ def check_attendance():
     class_name = find_one('managers', {"_id": username})["class"]
 
     today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date}, projection={"images":0})
+    trying()
     if "last_update" in today_attendance:
         print("last_update exists")
         return {"bool": True, "curr_date": curr_date}
