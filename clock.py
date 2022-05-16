@@ -29,7 +29,7 @@ def schedule_for_today():
     print(sched.get_jobs())
 
 
-@sched.scheduled_job('interval', minutes=1, seconds=30)
+@sched.scheduled_job('interval', minutes=1)
 def produce_by_click():
     db_format_date = get_db_date_format(date.today())
     fetch = find_all('manual', {"date": db_format_date, "status": "pending"})
@@ -38,7 +38,8 @@ def produce_by_click():
         print("====in TASKS loop=====")
         if task["status"] == 'pending':
             class_name = task["class_name"]
-            update_one('tasks', {"_id": task["_id"]}, {"status": "done"})
+            print(update_one('tasks', {"_id": task["_id"]}, {"status": "done"}))
+            print('updated status to done')
             sched.add_job(create_attendance_report, args=[class_name, db_format_date])
 
 # def produce_by_click(class_name, curr_date):
