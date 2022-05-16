@@ -449,6 +449,7 @@ def get_db_date_format(date_object):
 if __name__ == '__main__':
     print(datetime.now())
     execute_date_format = get_execute_date_format(datetime.now() + timedelta(seconds=25))
+
     print(execute_date_format)
 
     # x = get_datetime_for_scheduler("11:04")

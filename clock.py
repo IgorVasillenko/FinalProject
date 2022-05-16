@@ -29,16 +29,28 @@ def schedule_for_today():
     print(sched.get_jobs())
 
 
-def produce_by_click(class_name, curr_date):
-    # execute now
-    print("TRYING TO ADD SCHEDULE TASK")
-    print("curr date:" ,curr_date)
-    execute_date = get_execute_date_format(datetime.now() + timedelta(seconds=30))
-    print("execute_date:", execute_date)
-    sched.add_job(create_attendance_report, trigger="date", run_date=execute_date,
-                  args=[class_name, curr_date])
-    print("ADDED TASKS:")
-    print(sched.get_jobs())
+@sched.scheduled_job('interval', seconds=3)
+def produce_by_click():
+    db_format_date = get_db_date_format(date.today())
+    fetch = find_all('manual', {"date": db_format_date, "status": "pending"})
+    clean_tasks = handle_cursor_obj(fetch)
+    for task in clean_tasks:
+        print("====in TASKS loop=====")
+        if task["status"] == 'pending':
+            class_name = task["class_name"]
+            update_one('tasks', {"_id": task["_id"]}, {"status": "done"})
+            sched.add_job(create_attendance_report, args=[class_name, db_format_date])
+
+# def produce_by_click(class_name, curr_date):
+#     # execute now
+#     print("TRYING TO ADD SCHEDULE TASK")
+#     print("curr date:" ,curr_date)
+#     execute_date = get_execute_date_format(datetime.now() + timedelta(seconds=30))
+#     print("execute_date:", execute_date)
+#     sched.add_job(create_attendance_report, trigger="date", run_date=execute_date,
+#                   args=[class_name, curr_date])
+#     print("ADDED TASKS:")
+#     print(sched.get_jobs())
 
 
 def trying(class_name, curr_date):
@@ -53,3 +65,4 @@ def trying(class_name, curr_date):
 
 if __name__ == '__main__':
     sched.start()
+    print('ok')
