@@ -14,10 +14,10 @@ sched = BlockingScheduler()
 #     print('This job will run every three minutes.')
 
 
-@sched.scheduled_job('cron', hour='20', minute='02')
+@sched.scheduled_job('cron', hour='11', minute='28')
 def schedule_for_today():
     print("===========")
-    print("schedule works 20:02")
+    print("schedule works 11:28")
     print("===========")
 
     teachers = find_all('managers', {})
@@ -28,7 +28,8 @@ def schedule_for_today():
 
         execute_date_format, db_date_format = handle_schedule_dates(teacher["schedule"])
         print("TEACHER SCHEDULE IS AT: ", teacher["schedule"])
-        sched.add_job(create_attendance_report, args=[class_name, db_date_format])
+        sched.add_job(create_attendance_report, trigger='date', run_date=execute_date_format,
+                      args=[class_name, db_date_format])
     print("ADDED TASKS:")
     print(sched.get_jobs())
 
@@ -36,7 +37,7 @@ def schedule_for_today():
 def produce_by_click(class_name, curr_date):
     # execute now
     print("TRYING TO ADD SCHEDULE TASK")
-    sched.add_job(create_attendance_report, id="report of today",  args=[class_name, curr_date])
+    sched.add_job(func=create_attendance_report, id="report of today", trigger="date", args=[class_name, curr_date])
     print("ADDED TASKS:")
     for job in sched.get_jobs():
         print(job)
