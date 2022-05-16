@@ -29,7 +29,7 @@ def schedule_for_today():
     print(sched.get_jobs())
 
 
-@sched.scheduled_job('interval', seconds=3)
+@sched.scheduled_job('interval', seconds=15)
 def produce_by_click():
     db_format_date = get_db_date_format(date.today())
     fetch = find_all('manual', {"date": db_format_date, "status": "pending"})
