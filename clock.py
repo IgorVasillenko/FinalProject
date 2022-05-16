@@ -41,7 +41,7 @@ def produce_by_click(class_name, curr_date):
 
 
 def trying():
-    print(sched.scheduled_job())
+    print(sched.scheduled_job("date"))
     print(sched.get_jobs())
 
 # will run everyday at 01:05 AM.
