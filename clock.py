@@ -6,7 +6,8 @@ from datetime import datetime
 
 
 
-sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
+sched = BlockingScheduler()
+# sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 #
 # @sched.scheduled_job('interval', minutes=2)
 # def timed_job():
@@ -27,8 +28,7 @@ def schedule_for_today():
 
         execute_date_format, db_date_format = handle_schedule_dates(teacher["schedule"])
         print("TEACHER SCHEDULE IS AT: ", teacher["schedule"])
-        sched.add_job(create_attendance_report, trigger='date', run_date=datetime.now(),
-                      args=[class_name, db_date_format])
+        sched.add_job(create_attendance_report, args=[class_name, db_date_format])
     print("ADDED TASKS:")
     print(sched.get_jobs())
 
