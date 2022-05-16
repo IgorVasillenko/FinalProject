@@ -240,7 +240,6 @@ def check_attendance():
     class_name = find_one('managers', {"_id": username})["class"]
 
     today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date}, projection={"images":0})
-    trying()
     if "last_update" in today_attendance:
         print("last_update exists")
         return {"bool": True, "curr_date": curr_date}

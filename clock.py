@@ -34,15 +34,17 @@ def produce_by_click(class_name, curr_date):
     print("TRYING TO ADD SCHEDULE TASK")
     print("curr date:" ,curr_date)
     execute_date = get_execute_date_format(datetime.now() + timedelta(seconds=30))
+    print("execute_date:", execute_date)
     sched.add_job(create_attendance_report, trigger="date", run_date=execute_date,
                   args=[class_name, curr_date])
     print("ADDED TASKS:")
     print(sched.get_jobs())
 
 
-def trying():
-    print(sched.scheduled_job("date"))
-    print(sched.get_jobs())
+def trying(class_name, curr_date):
+    print("im in trying function ")
+    print(datetime.now())
+    print(class_name, curr_date)
 
 # will run everyday at 01:05 AM.
 # sched.add_job(my_job, trigger='cron', hour='01', minute='05')
