@@ -84,7 +84,16 @@
                                 </tbody>
                             </table>
                         </div>
+                        <form action="{{ url_for('produce_report') }}" method="post">
+                            <!--hidden inputs so we can send extra data-->
+                        <!--and prevent un-needed fetching from db-->
+                            <input class="--postInput" name="curr_date" value={{ curr_date }} hidden>
+                            <input class="--postInput" name="class" value='{{ attendence.class_name }}' hidden>
+                            <input class="--postInput" name="username" value={{ username }} hidden>
+                            <input class="--postInput" name="schedule" value={{ schedule }} hidden>
 
+                            <input class="submit btn btn-success btn-sm" type="submit" value="Produce report again!"/>
+                        </form>
                     {% else %}
                     <!--the report wasn't produced,but there is data to process.-->
                         <div class=mt-4">
