@@ -1,6 +1,5 @@
-from s3_aws import add_kid_files
 from db_queries.db_functions import *
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 import base64
 from functional.settings_functions import *
 
