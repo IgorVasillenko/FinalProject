@@ -1,3 +1,4 @@
+from s3_aws import add_kid_files
 from db_queries.db_functions import *
 from datetime import date, datetime, timedelta
 import base64
@@ -30,6 +31,7 @@ def handle_register(user_input: dict):
     bool, msg = check_register(user_input)
     if bool:
         insert_one('managers', user_input)
+        insert_one('classes_models', {"class_name": user_input['class'], "status":"idle"})
         return bool, msg
     return bool, msg
 
@@ -179,6 +181,7 @@ def handle_addKid_post(user_inputs: dict,  files: dict):
         user_inputs = handle_gender_input(user_inputs)
         insert_values = {**processed_files, **user_inputs}
         insert_one('kids', insert_values)
+        update_one(collection='classes_models', query={"class_name": user_inputs["class"]}, newValues={"status":"updated"}, upsertBool=False)
         return True, None
     else:
         # take care of the msg we want to send back to the user.
@@ -282,6 +285,8 @@ def handle_editKid_post(user_inputs: dict,  files: dict):
         updated_values = {**processed_files, **user_inputs}
         query = create_query(user_inputs, '_id')
         update_one(collection='kids', query=query, newValues=updated_values, upsertBool=False)
+        update_one(collection='classes_models', query={"class_name": user_inputs["class"]}, newValues={"status":"updated"}, upsertBool=False)
+
         return True, None
     else:
         if inputs_msg and (type(processed_files) == str):

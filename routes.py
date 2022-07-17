@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from main import *
 from img_comparing import create_attendance_report
 from clock import *
-
+from s3_aws import add_kid_files, edit_kid_images
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "static/images/"
@@ -86,6 +86,8 @@ def addKid(username):
         user_inputs['class'] = username
         bool, msg = handle_addKid_post(user_inputs, request.files.to_dict())
         if bool:
+            # load the files to s3
+            add_kid_files(request.files.to_dict(), user_inputs['_id'], user_inputs['class'])
             # get from DB the teacher username of current class.
             class_teacher = fetch_username_using_classname(user_inputs['class'])
             return redirect(f'/mainPage/{class_teacher}')
@@ -108,7 +110,8 @@ def editKid(kidId):
         '''
         bool, msg = handle_editKid_post(request.form.to_dict(), request.files.to_dict())
         if bool:
-            '''the inputs were valid, db was update - return the main page.'''
+            '''the inputs were valid, db was update -  update s3 and return the main page.'''
+            edit_kid_images(request.files.to_dict(), request.form.to_dict()["_id"], request.form.to_dict()['class'] )
             return redirect(f'/mainPage/{class_teacher}')
         else:
             '''inputs weren't good, re-render the page with the error msg.'''
