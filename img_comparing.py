@@ -53,16 +53,7 @@ def compare_images(kid_images, unknown_images):
     return False, None
 
 
-def gather_kids_objects_to_array(class_name):
-    """
-    :param class_name: the name of the class of the kids.
-    :return - returns an array of kid objects details in this format: [{},{},{}]
-    """
-    class_kids = find_all('kids', {"class": class_name})
-    kids_details = []
-    for doc in class_kids:
-        kids_details.append(doc)
-    return kids_details
+
 
 
 def create_encoding_kid_imgs(kid_obj):

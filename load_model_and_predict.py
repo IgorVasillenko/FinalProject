@@ -18,6 +18,8 @@ def create_encoding_for_daily_uploads(class_name, curr_date):
     :param curr_date: the date to fetch
     :return: clean array containing 128-dimension face encoding for each valid picture.
     """
+    print(class_name, curr_date)
+
     today_pictures_array = find_one('attendance', {"class_name": class_name, "date": curr_date})["images"]
     encoding_today_imgs = []
     for img in today_pictures_array:
@@ -35,8 +37,5 @@ def get_today_positive_attendance(class_name, curr_date):
     model = load_model(f'svm_pkl_{class_name}')
     known_ids_for_today = model.predict(daily_encoded_images)
     return list(set(known_ids_for_today))
-
-
-print(get_today_positive_attendance('test1', '19/07/2022'))
 
 

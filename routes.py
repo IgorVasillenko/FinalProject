@@ -221,13 +221,8 @@ def produce_report():
     print("start time:", now.strftime("%H:%M:%S"))
     username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
     db_date_format = transform_date_to_db_format(curr_date)
-
-    update_one('manual', {"date": db_date_format, "class_name": class_name},
-               {"date": db_date_format, "class_name": class_name, "task_name": "produce", "status": "pending"},
-               upsertBool=True)
-    # produce_by_click(class_name=class_name, curr_date=db_date_format)
-    return redirect(f"load/{username}")
-    # return redirect(f"mainPage/{username}")
+    details = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
+    return render_template("subfolder/test.html", details=details)
 
 
 @app.route('/load/<username>', methods=["GET"])
