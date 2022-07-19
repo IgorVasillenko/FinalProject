@@ -1,9 +1,6 @@
 import boto3
 import io
-
-# aws_access_key_id=AKIA4ORIKOGWWWIRAUTS
-# aws_secret_access_key=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
-# region=us-east-1
+import pickle
 
 
 s3 = boto3.client(
@@ -24,9 +21,17 @@ def add_kid_files(kid_images, kid_id, class_name):
 
 def delete_kid_from_s3(kid_id, class_name):
     s3.delete_object(Bucket='classes-images', Key=f'{class_name}/{kid_id}')
-    # s3.Object('classes-images', f'{class_name}/{kid_id}').delete()
 
 
 def edit_kid_images(kid_images, kid_id, class_name):
     delete_kid_from_s3(kid_id, class_name)
     add_kid_files(kid_images, kid_id, class_name)
+
+
+def load_model(key):
+    pickle_object = s3.get_object(Bucket="pickle-files-models", Key=key)['Body'].read()
+    model = pickle.loads(pickle_object)
+
+    return model
+
+
