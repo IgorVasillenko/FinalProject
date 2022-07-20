@@ -218,34 +218,37 @@ def produce_report():
     :return:
     '''
     now = datetime.now()
-    print("start time:", now.strftime("%H:%M:%S"))
+    print("start time producing:", now.strftime("%H:%M:%S"))
     username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
     db_date_format = transform_date_to_db_format(curr_date)
-    details = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
-    return render_template("subfolder/test.html", details=details)
+    bool_answer_for_report = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
+    print("end time producing:", now.strftime("%H:%M:%S"))
+    if bool_answer_for_report:
+        return redirect(f'/report/{username}')
+    return render_template('subfolder/error_producing.html', username=username)
 
 
-@app.route('/load/<username>', methods=["GET"])
-def load(username):
-    return render_template('subfolder/load.html', username=username)
+# @app.route('/load/<username>', methods=["GET"])
+# def load(username):
+#     return render_template('subfolder/load.html', username=username)
 
 
-@app.route('/check_attendance', methods=["GET"])
-def check_attendance():
-    """gets a querystring containing the username"""
-
-    now = datetime.now()
-    curr_date = get_db_date_format(now)
-
-    username = request.args.get('username')
-    class_name = find_one('managers', {"_id": username})["class"]
-
-    today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date}, projection={"images":0})
-    if "last_update" in today_attendance:
-        print("last_update exists")
-        return {"bool": True, "curr_date": curr_date}
-    print("last_update doesnt exists")
-    return {"bool": False}
+# @app.route('/check_attendance', methods=["GET"])
+# def check_attendance():
+#     """gets a querystring containing the username"""
+#
+#     now = datetime.now()
+#     curr_date = get_db_date_format(now)
+#
+#     username = request.args.get('username')
+#     class_name = find_one('managers', {"_id": username})["class"]
+#
+#     today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date}, projection={"images":0})
+#     if "last_update" in today_attendance:
+#         print("last_update exists")
+#         return {"bool": True, "curr_date": curr_date}
+#     print("last_update doesnt exists")
+#     return {"bool": False}
 
 
 if __name__ == '__main__':

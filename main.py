@@ -464,9 +464,6 @@ def gather_kids_objects_to_array(class_name):
     """
     class_kids = find_all('kids', {"class": class_name})
     kids_details = [doc["_id"] for doc in class_kids]
-    # for doc in class_kids:
-    #     kids_details.append(doc)
-
     return kids_details
 
 
@@ -474,11 +471,6 @@ def format_report_for_db(class_kids_ids: list, positive_attendance: list):
     report_for_db = {}
     for kid_id in class_kids_ids:
         report_for_db[f"{kid_id}"] = True if kid_id in positive_attendance else False
-        # if id in positive_attendance:
-        #     report_for_db[f"{id}"] = True
-        # else:
-        #     report_for_db[f"{id}"] = False
-    print(report_for_db)
     return report_for_db
 
 
@@ -486,7 +478,9 @@ def handle_manual_report_request(class_name, curr_date):
     class_kids_ids = gather_kids_objects_to_array(class_name)
     positive = get_today_positive_attendance(class_name, curr_date)
     information_for_db = format_report_for_db(class_kids_ids, positive_attendance=positive)
-    return information_for_db
+    query = {"class_name": class_name, "date": curr_date}
+    modify_count = update_one('attendance', query, newValues={"attendence_report": information_for_db})
+    return True if modify_count == 1 else False
 
 
 if __name__ == '__main__':
