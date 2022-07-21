@@ -194,7 +194,6 @@ def report(username):
         curr_date = max_date_for_html
 
     else:
-        # print(request.args.get("curr_date"))
         curr_date = request.form["curr_date"]
         db_date = transform_date_to_db_format(curr_date)
         today_attendance = find_one('attendance', {"class_name": teacher_details["class"], "date": db_date})
@@ -222,7 +221,6 @@ def produce_report():
     db_date_format = transform_date_to_db_format(curr_date)
     bool_answer_for_report = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
     print("end time producing:", now.strftime("%H:%M:%S"))
-    print(bool_answer_for_report)
     if bool_answer_for_report:
         return redirect(f'/report/{username}')
     return render_template('subfolder/error_producing.html', username=username,
