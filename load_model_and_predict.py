@@ -36,8 +36,10 @@ def create_encoding_for_daily_uploads(class_name, curr_date):
 
 def get_today_positive_attendance(class_name, curr_date):
     daily_encoded_images = create_encoding_for_daily_uploads(class_name, curr_date)
-    model = load_model(f'svm_pkl_{class_name}')
-    known_ids_for_today = model.predict(daily_encoded_images)
-    return list(set(known_ids_for_today))
-
+    if len(daily_encoded_images) > 0:
+        # if there any daily images
+        model = load_model(f'svm_pkl_{class_name}')
+        known_ids_for_today = model.predict(daily_encoded_images)
+        return list(set(known_ids_for_today))
+    return []
 
