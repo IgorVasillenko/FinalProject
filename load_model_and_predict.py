@@ -18,18 +18,20 @@ def create_encoding_for_daily_uploads(class_name, curr_date):
     :param curr_date: the date to fetch
     :return: clean array containing 128-dimension face encoding for each valid picture.
     """
-    print(class_name, curr_date)
-
-    today_pictures_array = find_one('attendance', {"class_name": class_name, "date": curr_date})["images"]
-    encoding_today_imgs = []
-    for img in today_pictures_array:
-        image = base64.b64decode(img)
-        un_known_image = face_recognition.load_image_file(io.BytesIO(image))
-        un_known_encoding = face_recognition.face_encodings(un_known_image)
-        if len(un_known_encoding):
-            # if the method recognized at least one face
-            encoding_today_imgs.append(un_known_encoding[0])
-    return encoding_today_imgs
+    try:
+        today_pictures_array = find_one('attendance', {"class_name": class_name, "date": curr_date})["images"]
+        encoding_today_imgs = []
+        for img in today_pictures_array:
+            image = base64.b64decode(img)
+            un_known_image = face_recognition.load_image_file(io.BytesIO(image))
+            un_known_encoding = face_recognition.face_encodings(un_known_image)
+            if len(un_known_encoding):
+                # if the method recognized at least one face
+                encoding_today_imgs.append(un_known_encoding[0])
+        return encoding_today_imgs
+    except:
+        # no daily images were uploaded
+        return []
 
 
 def get_today_positive_attendance(class_name, curr_date):

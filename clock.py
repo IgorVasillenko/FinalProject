@@ -1,13 +1,12 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from db_queries.db_functions import *
 from main import *
-from img_comparing import *
 from datetime import datetime
 
 sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 
 
-@sched.scheduled_job('cron', hour='12', minute='10')
+@sched.scheduled_job('cron', hour='12', minute='28')
 def schedule_for_today():
     now = datetime.now()
     print("===========")
