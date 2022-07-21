@@ -1,9 +1,8 @@
 from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from main import *
-from img_comparing import create_attendance_report
 from clock import *
-from s3_aws import add_kid_files, edit_kid_images
+from s3_aws import add_kid_files, delete_kid_from_s3
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "static/images/"
@@ -111,7 +110,7 @@ def editKid(kidId):
         bool, msg = handle_editKid_post(request.form.to_dict(), request.files.to_dict())
         if bool:
             '''the inputs were valid, db was update -  update s3 and return the main page.'''
-            edit_kid_images(request.files.to_dict(), request.form.to_dict()["_id"], request.form.to_dict()['class'] )
+            add_kid_files(request.files.to_dict(), request.form.to_dict()["_id"], request.form.to_dict()['class'])
             return redirect(f'/mainPage/{class_teacher}')
         else:
             '''inputs weren't good, re-render the page with the error msg.'''
@@ -170,8 +169,8 @@ def settings(username):
 def deleteKid(kidId):
     class_name = find_one(collection="kids", query={"_id": kidId})["class"]
     username = fetch_username_using_classname(classname=class_name)
-    print(username)
     delete_one(collection="kids", query={"_id": kidId})
+    delete_kid_from_s3(class_name=class_name, kid_id=kidId)
     return redirect(f'/mainPage/{username}')
 
 
@@ -223,9 +222,11 @@ def produce_report():
     db_date_format = transform_date_to_db_format(curr_date)
     bool_answer_for_report = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
     print("end time producing:", now.strftime("%H:%M:%S"))
+    print(bool_answer_for_report)
     if bool_answer_for_report:
         return redirect(f'/report/{username}')
-    return render_template('subfolder/error_producing.html', username=username)
+    return render_template('subfolder/error_producing.html', username=username,
+                           msg="Model is not ready, try again tomorrow")
 
 
 # @app.route('/load/<username>', methods=["GET"])

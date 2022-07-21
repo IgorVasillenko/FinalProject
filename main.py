@@ -278,6 +278,7 @@ def handle_editKid_post(user_inputs: dict,  files: dict):
     '''
 
     files_bool, processed_files = handle_files(files, len(files))
+    print("in main - edit kid- num of files: ", len(files))
     inputs_bool, inputs_msg = common_input_validate(user_inputs)
     if files_bool and inputs_bool:
         # handle gender radio selection, update the db , return true
@@ -475,12 +476,24 @@ def format_report_for_db(class_kids_ids: list, positive_attendance: list):
 
 
 def handle_manual_report_request(class_name, curr_date):
-    class_kids_ids = gather_kids_objects_to_array(class_name)
-    positive = get_today_positive_attendance(class_name, curr_date)
-    information_for_db = format_report_for_db(class_kids_ids, positive_attendance=positive)
-    query = {"class_name": class_name, "date": curr_date}
-    modify_count = update_one('attendance', query, newValues={"attendence_report": information_for_db})
-    return True if modify_count == 1 else False
+    if is_model_ready(class_name):
+        class_kids_ids = gather_kids_objects_to_array(class_name)
+        positive = get_today_positive_attendance(class_name, curr_date)
+        information_for_db = format_report_for_db(class_kids_ids, positive_attendance=positive)
+        query = {"class_name": class_name, "date": curr_date}
+        update_one('attendance', query, newValues={"attendence_report": information_for_db})
+        return True
+    return False
+
+
+def is_model_ready(class_name):
+    model_classes = find_one('classes_models', {"class_name": class_name})
+    return True if model_classes["status"] == "ready" else False
+
+
+def handle_schedule_report(class_name, curr_date):
+    handle_manual_report_request(class_name, curr_date)
+    # now send SMS to the parents
 
 
 if __name__ == '__main__':

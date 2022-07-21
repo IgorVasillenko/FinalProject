@@ -26,20 +26,6 @@ def schedule_for_today():
     print(sched.get_jobs())
 
 
-# @sched.scheduled_job('interval', minutes=1)
-# def produce_by_click():
-#     db_format_date = get_db_date_format(date.today())
-#     fetch = find_all('manual', {"date": db_format_date, "status": "pending"})
-#     clean_tasks = handle_cursor_obj(fetch)
-#     for task in clean_tasks:
-#         print("====in TASKS loop=====")
-#         class_name = task["class_name"]
-#         print(update_one('manual', {"date": db_format_date, "class_name": task["class_name"]}, {"status": "done"}))
-#         print('updated status to done')
-#         sched.add_job(create_attendance_report, args=[class_name, db_format_date])
-
-
-
 if __name__ == '__main__':
     sched.start()
     print('ok')

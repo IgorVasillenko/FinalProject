@@ -12,7 +12,13 @@
 </head>
 <body>
         <div class="container">
-            <div class="message text-danger mt-4"> Something went wrong with the report.</div>
+            {% if msg %}
+                <p class="text-danger">{{ msg }}</p>
+            {% else %}
+                <div class="message text-danger mt-4"> Something went wrong with the report.</div>
+
+            {% endif %}
+
             <form action="/report/{{username}}" method="get">
                 <button type="submit" class="btn btn-primary">Back to report page</button>
             </form>
