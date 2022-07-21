@@ -6,7 +6,7 @@ from datetime import datetime
 sched = BlockingScheduler({'apscheduler.timezone': 'Israel'})
 
 
-@sched.scheduled_job('cron', hour='12', minute='42')
+@sched.scheduled_job('cron', hour='12', minute='58')
 def schedule_for_today():
     now = datetime.now()
     print("===========")
