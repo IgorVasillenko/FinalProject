@@ -6,6 +6,8 @@ import pickle
 
 AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
 AWS_SECRET_ACCESS = os.environ.get("AWS_SECRET_ACCESS")
+print(AWS_ACCESS_KEY)
+print(AWS_SECRET_ACCESS)
 
 s3 = boto3.client(
     service_name='s3',
@@ -36,6 +38,7 @@ def load_model(key):
 
 
 if __name__ == '__main__':
-    pass
+    print(AWS_ACCESS_KEY )
+    print(AWS_SECRET_ACCESS)
 
     # setx AWS_SECRET_ACCESS +8h6dHxrEq45v8fGGzqFEc2a+1qbU2qCnD7vTqQC
