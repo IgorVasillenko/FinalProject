@@ -1,12 +1,17 @@
 import boto3
 import io
+import os
 import pickle
+
+
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
+AWS_SECRET_ACCESS = os.environ.get("AWS_SECRET_ACCESS")
 
 s3 = boto3.client(
     service_name='s3',
     region_name='us-east-1',
-    aws_access_key_id='AKIA4ORIKOGWWWIRAUTS',
-    aws_secret_access_key='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'
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_ACCESS
 )
 
 
@@ -31,5 +36,6 @@ def load_model(key):
 
 
 if __name__ == '__main__':
-    delete_kid_from_s3("123456780", "test1")
-    # print(load_model("svm_pkl_test1"))
+    pass
+
+    # setx AWS_SECRET_ACCESS +8h6dHxrEq45v8fGGzqFEc2a+1qbU2qCnD7vTqQC
