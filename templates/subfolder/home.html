@@ -13,42 +13,62 @@
 </head>
 
 <body>
-    <div class="main-content-container d-flex flex-column flex-md-row justify-content-md-center mt-5">
-        <!-- the main container will hold most of the main content. 
-        the main container is divided to 2 main parts:
-            1. left container - hello msg and details
-            2. right container - login form -->
-        <div class="left-container border d-flex flex-column align-items-start bg-dark">
-            <p class="fs-3 align-items-center mt-md-5 pt-md-5"> 
-                Welcome to Face Recognition System.
-            </p>
-            <p>Login or register to create new class.</p>
-        </div>
-        <div class="right-container border d-flex flex-column justify-content-center ">
-            <div class="col-md-6 col-sm-12">
-                <div class="login-form ms-md-4">
+    <section class="">
+        <header>
+            <h1 class="text-center">Attendance system</h1>
+            <h6 class="text-center">Login or register to create new class.</h6>
+        </header>
+        <!--    the container holds the left side (image) and right (form)-->
+        <div class="container-fluid ">
+            <div class="row d-flex justify-content-center mt-5">
+                <!--left image-->
+                <div class="col-md-9 col-lg-6 col-xl-5">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                    class="img-fluid" alt="Sample image">
+                </div>
+
+            <!--form-->
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                     <form action="login" method="post">
-                        <div class="form-group">
-                            <label for="_id">User Name</label>
-                            <input name="_id" type="text" id="_id" class="form-control" placeholder="User Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input name="password" type="password" id="password" class="form-control" placeholder="Password">
-                        </div>
-                        {% if message %}
-                            <p class="text-danger">{{ message }}</p>
-                        {% endif %}
-                        <div class="form-btns mt-3 ">
-                            <button type="submit" class="btn btn-secondary">Login</button>
-                            <a href=register ><button type="button" class="btn btn-secondary">Register</button></a>
-                        </div>
+                          <!-- Username input -->
+                          <div class="form-outline mb-4">
+                            <input type="text" name="_id" id="_id" class="form-control form-control-lg"
+                              placeholder="Enter a valid username" />
+                            <label class="form-label" for="_id">Username</label>
+                          </div>
+
+                          <!-- Password input -->
+                          <div class="form-outline mb-3">
+                            <input type="password" id="password" class="form-control form-control-lg"
+                              placeholder="Enter password" name="password"/>
+                            <label class="form-label" for="password">Password</label>
+                          </div>
+
+                            {% if message %}
+                                <p class="text-danger">{{ message }}</p>
+                            {% endif %}
+
+                          <div class="d-flex justify-content-between align-items-center">
+                            <!--Submit-->
+                              <div class="text-center text-lg-start mt-4 pt-2">
+                                <button type="submit" class="btn btn-primary btn-md"
+                                  style="padding-left: 2.5rem; padding-right: 2.5rem;">Login
+                                </button>
+                              </div>
+                              <!--Register-->
+                              <div class="text-center text-lg-start mt-4 pt-2">
+                                  <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account?
+                                    <a href=register class="link-danger" >Register</a>
+                                  </p>
+                              </div>
+                          </div>
                     </form>
                 </div>
             </div>
         </div>
 
-    </div>
+    </section>
+
 </body>
 
 </html>

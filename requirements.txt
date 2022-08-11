@@ -30,3 +30,4 @@ Werkzeug==2.0.2
 boto3==1.24.31
 sklearn
 scikit-learn==1.1.1
+twilio

@@ -482,8 +482,8 @@ def handle_manual_report_request(class_name, curr_date):
         information_for_db = format_report_for_db(class_kids_ids, positive_attendance=positive)
         query = {"class_name": class_name, "date": curr_date}
         update_one('attendance', query, newValues={"attendence_report": information_for_db})
-        return True
-    return False
+        return True, information_for_db
+    return False, None
 
 
 def is_model_ready(class_name):
@@ -492,7 +492,10 @@ def is_model_ready(class_name):
 
 
 def handle_schedule_report(class_name, curr_date):
-    handle_manual_report_request(class_name, curr_date)
+    did_produce, kids_list = handle_manual_report_request(class_name, curr_date)
+    if did_produce:
+        for kid in kids_list:
+            print(kid)
     # now send SMS to the parents
 
 

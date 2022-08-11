@@ -219,9 +219,11 @@ def produce_report():
     print("start time producing:", now.strftime("%H:%M:%S"))
     username, curr_date, class_name = request.form["username"], request.form["curr_date"], request.form["class"]
     db_date_format = transform_date_to_db_format(curr_date)
-    bool_answer_for_report = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
+    bool_answer_for_report, kids_attendance_list = handle_manual_report_request(class_name=class_name, curr_date=db_date_format)
     print("end time producing:", now.strftime("%H:%M:%S"))
     if bool_answer_for_report:
+        for kid in kids_attendance_list:
+            print(kid)
         return redirect(f'/report/{username}')
     return render_template('subfolder/error_producing.html', username=username,
                            msg="Model is not ready, try again tomorrow")
