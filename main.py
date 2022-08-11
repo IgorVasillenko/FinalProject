@@ -1,3 +1,4 @@
+from SMS_twillo import sms_for_parents
 from load_model_and_predict import get_today_positive_attendance
 from db_queries.db_functions import *
 from datetime import date, datetime
@@ -471,7 +472,9 @@ def gather_kids_objects_to_array(class_name):
 def format_report_for_db(class_kids_ids: list, positive_attendance: list):
     report_for_db = {}
     for kid_id in class_kids_ids:
-        report_for_db[f"{kid_id}"] = True if kid_id in positive_attendance else False
+        # report_for_db[f"{kid_id}"] = True if kid_id in positive_attendance else False
+        report_for_db[f"{kid_id}"] = {"attendance": True if kid_id in positive_attendance else False,
+                                      "sms_sent": False}
     return report_for_db
 
 
@@ -494,28 +497,26 @@ def is_model_ready(class_name):
 def handle_schedule_report(class_name, curr_date):
     did_produce, kids_list = handle_manual_report_request(class_name, curr_date)
     if did_produce:
-        for kid in kids_list:
-            print(kid)
+        send_sms_to_parents(kids_list)
     # now send SMS to the parents
 
 
+def send_sms_to_parents(attendance_object):
+    for kid_id, details in attendance_object["attendence_report"].items():
+        if not details["attendance"] and not details["sms_sent"]:
+            # if the kid is not in the institute and didn't send SMS yet.
+            parent_phone_number = find_one('kids', {"_id": kid_id})["parent_phone"]
+            valid = sms_for_parents(parent_phone_number, kid_id)
+            if valid:
+                query = {"class_name": attendance_object["class_name"], "date": attendance_object["date"]}
+                updated_kid = {f"attendence_report.{kid_id}.sms_sent": True}
+                update_one("attendance", query, updated_kid)
+
+
 if __name__ == '__main__':
-    pass
+   pass
 
 
-    # x = get_datetime_for_scheduler("11:04")
-    # db_date_format = x.strftime("%d/%m/%Y")
-    # print(db_date_format)
-    #
-    # teachers = find_all('managers', {})
-    # clean_teachers = handle_cursor_obj(teachers)
-    #
-    # print(clean_teachers["schedule"])
-    # schedule_datetime = get_datetime_for_scheduler(clean_teachers["schedule"])
-    # db_curr_date_format = schedule_datetime.strftime("%d/%m/%Y")
-    #
-    # print(schedule_datetime)
-    # print(db_curr_date_format)
 
 
 

@@ -229,5 +229,17 @@ def produce_report():
                            msg="Model is not ready, try again tomorrow")
 
 
+@app.route('/sendSMS/<class_name>', methods=["GET"])
+# this route activate the producing of the attendance report
+def sendSMS(class_name):
+    curr_date = date.today().strftime("%d/%m/%Y")
+    username = fetch_username_using_classname(class_name)
+    attendance_object = find_one('attendance', {"class_name": class_name, "date": curr_date})
+    if attendance_object:
+        if "attendence_report" in attendance_object.keys():
+            send_sms_to_parents(attendance_object)
+    return redirect(f'/report/{username}')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

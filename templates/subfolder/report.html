@@ -68,8 +68,8 @@
                                             {% for id in attendence.attendence_report.keys() %}
                                                 {% if id == kid._id %}
                                                 <!--match the attendence result to current kid-->
-                                                    <td> {{ attendence.attendence_report[id] }}</td>
-                                                    {% if attendence.sms_sent and not attendence.attendence_report[id]%}
+                                                    <td> {{ attendence.attendence_report[id].attendance }}</td>
+                                                    {% if not attendence.attendence_report[id].attendance and attendence.attendence_report[id].sms_sent  %}
                                                         <td> V </td>
                                                     {% else %}
                                                         <td>  </td>
@@ -93,6 +93,10 @@
                             <input class="--postInput" name="schedule" value={{ schedule }} hidden>
 
                             <input class="submit btn btn-success btn-sm" type="submit" value="Produce report again!"/>
+                            <a class="mt-2" href="{{ url_for('sendSMS' ,class_name=class_name)}}">
+                                <button type="button" class="btn btn-danger btn-sm ">Send SMS's</button>
+                            </a>
+
                         </form>
                     {% else %}
                     <!--the report wasn't produced,but there is data to process.-->
