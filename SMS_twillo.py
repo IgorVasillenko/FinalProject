@@ -9,9 +9,9 @@ client = Client(account_sid, auth_token)
 def sms_for_parents(phone_number, kid_id):
     body_message = f"{kid_id} is not in the institute"
     valid_phone_number = '+972' + phone_number[1:]
-    return client.messages.create(
+    msg = client.messages.create(
         from_='+19145064929',
         body=body_message,
         to=valid_phone_number
     )
-
+    return msg

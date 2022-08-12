@@ -513,11 +513,13 @@ def handle_schedule_report(class_name, curr_date):
 
 def send_sms_to_parents(attendance_object):
     for kid_id, details in attendance_object["attendence_report"].items():
+        print(details, kid_id)
         if not details["attendance"] and not details["sms_sent"]:
             # if the kid is not in the institute and didn't send SMS yet.
             kid_full_details = find_one('kids', {"_id": kid_id})
             parent_phone_number = kid_full_details["parent_phone"]
             first_name = kid_full_details["first_name"]
+            print(first_name, parent_phone_number)
             valid = sms_for_parents(parent_phone_number, first_name)
             if valid:
                 query = {"class_name": attendance_object["class_name"], "date": attendance_object["date"]}
