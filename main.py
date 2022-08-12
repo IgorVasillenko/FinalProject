@@ -469,20 +469,30 @@ def gather_kids_objects_to_array(class_name):
     return kids_details
 
 
-def format_report_for_db(class_kids_ids: list, positive_attendance: list):
-    report_for_db = {}
-    for kid_id in class_kids_ids:
-        # report_for_db[f"{kid_id}"] = True if kid_id in positive_attendance else False
-        report_for_db[f"{kid_id}"] = {"attendance": True if kid_id in positive_attendance else False,
-                                      "sms_sent": False}
-    return report_for_db
+def format_report_for_db(class_kids_ids: list, positive_attendance: list, class_name: str, curr_date: str):
+    # check for existing data
+    today_attendance = find_one('attendance', {"class_name": class_name, "date": curr_date})
+    if "attendence_report" in today_attendance.keys():
+        # report already exists - change the data and send it back to DB.
+        report_from_db = today_attendance["attendence_report"]
+        for kid_id in class_kids_ids:
+            report_from_db[kid_id] = {**today_attendance["attendence_report"][kid_id],
+                                      "attendance": True if kid_id in positive_attendance else False}
+        return report_from_db
+    else:
+        # report doesn't exists, create it now and send to DB.
+        report_for_db = {}
+        for kid_id in class_kids_ids:
+            report_for_db[f"{kid_id}"] = {"attendance": True if kid_id in positive_attendance else False,
+                                          "sms_sent": False}
+        return report_for_db
 
 
 def handle_manual_report_request(class_name, curr_date):
     if is_model_ready(class_name):
         class_kids_ids = gather_kids_objects_to_array(class_name)
         positive = get_today_positive_attendance(class_name, curr_date)
-        information_for_db = format_report_for_db(class_kids_ids, positive_attendance=positive)
+        information_for_db = format_report_for_db(class_kids_ids, positive, class_name, curr_date)
         query = {"class_name": class_name, "date": curr_date}
         update_one('attendance', query, newValues={"attendence_report": information_for_db})
         return True, information_for_db
@@ -505,8 +515,10 @@ def send_sms_to_parents(attendance_object):
     for kid_id, details in attendance_object["attendence_report"].items():
         if not details["attendance"] and not details["sms_sent"]:
             # if the kid is not in the institute and didn't send SMS yet.
-            parent_phone_number = find_one('kids', {"_id": kid_id})["parent_phone"]
-            valid = sms_for_parents(parent_phone_number, kid_id)
+            kid_full_details = find_one('kids', {"_id": kid_id})
+            parent_phone_number = kid_full_details["parent_phone"]
+            first_name = kid_full_details["first_name"]
+            valid = sms_for_parents(parent_phone_number, first_name)
             if valid:
                 query = {"class_name": attendance_object["class_name"], "date": attendance_object["date"]}
                 updated_kid = {f"attendence_report.{kid_id}.sms_sent": True}

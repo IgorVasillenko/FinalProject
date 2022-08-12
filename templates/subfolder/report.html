@@ -69,7 +69,7 @@
                                                 {% if id == kid._id %}
                                                 <!--match the attendence result to current kid-->
                                                     <td> {{ attendence.attendence_report[id].attendance }}</td>
-                                                    {% if not attendence.attendence_report[id].attendance and attendence.attendence_report[id].sms_sent  %}
+                                                    {% if attendence.attendence_report[id].sms_sent  %}
                                                         <td> V </td>
                                                     {% else %}
                                                         <td>  </td>
